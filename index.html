@@ -305,6 +305,57 @@
   footer{margin-top:40px;padding:20px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem;text-align:center;}
   footer p{margin:4px 0;}
 
+  /* ===== 摊位详情弹窗 ===== */
+  .modal-overlay{position:fixed;inset:0;z-index:100;background:rgba(58,44,32,.52);display:flex;align-items:center;justify-content:center;padding:16px;}
+  .modal-overlay[hidden]{display:none;}
+  .modal{position:relative;background:var(--card);border-radius:18px;max-width:560px;width:100%;max-height:86vh;overflow-y:auto;padding:20px;box-shadow:0 14px 44px rgba(0,0,0,.28);}
+  .modal-close{position:absolute;top:12px;right:12px;min-width:36px;min-height:36px;border:1px solid var(--line);background:#fff;border-radius:10px;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .modal-close:hover{background:var(--brick);color:#fff;border-color:var(--brick);}
+  .modal-title{font-family:var(--serif);font-size:1.35rem;margin:0 40px 6px 0;line-height:1.3;}
+  .modal-rating{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+  .modal-avg{font-size:1.2rem;font-weight:800;color:var(--brick);font-family:var(--serif);}
+  .modal-stars{display:inline-flex;gap:2px;}
+  .modal-count{font-size:.8rem;color:var(--muted);}
+  .modal-sub{font-family:var(--serif);font-size:.98rem;margin:18px 0 8px;border-top:1px solid var(--line);padding-top:14px;}
+  .modal-dishes{display:flex;flex-direction:column;gap:8px;margin-bottom:4px;}
+  .modal-dish{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--chip);border-radius:10px;padding:8px 12px;font-size:.86rem;}
+  .modal-dish__name{font-weight:600;color:var(--ink);}
+  .modal-dish__meta{color:var(--muted);font-size:.78rem;text-align:right;}
+  .modal-cat{font-size:.78rem;font-weight:700;color:var(--brick);margin:10px 0 2px;}
+  .modal-dish__note{font-weight:400;color:var(--muted);font-size:.76rem;margin-left:4px;}
+  .modal-reviews{display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;}
+  .review{border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:#fff;}
+  .review__head{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .review__stars{display:inline-flex;gap:2px;}
+  .review__time{font-size:.74rem;color:var(--muted);}
+  .review__content{font-size:.86rem;margin:6px 0 0;color:#5A4A38;word-break:break-word;}
+  .review__content--empty{color:var(--muted);}
+  .modal-empty{color:var(--muted);font-size:.86rem;margin:4px 0;}
+  .modal-form{display:flex;flex-direction:column;gap:12px;}
+  .star-picker{display:flex;gap:2px;}
+  .star-btn{background:none;border:none;padding:2px;cursor:pointer;min-width:34px;min-height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;}
+  .star-btn:hover{background:var(--chip);}
+  .review-input{width:100%;min-height:64px;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);resize:vertical;font-family:inherit;line-height:1.5;}
+  .review-input:focus{outline:2px solid var(--brick);outline-offset:1px;border-color:var(--brick);}
+  .form-msg{font-size:.86rem;margin:0;font-weight:600;}
+  .form-msg--error{color:var(--brick);}
+  .form-msg--ok{color:var(--green);}
+  .modal-note{margin:16px 0 0;font-size:.72rem;color:var(--muted);text-align:center;border-top:1px dashed var(--line);padding-top:10px;}
+  .card--clickable{cursor:pointer;}
+  .card--clickable:hover{border-color:var(--brick);}
+
+  /* ===== 周边店铺详情弹窗 ===== */
+  .shop-info{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:12px;}
+  .shop-info .meta-item{font-size:.86rem;}
+  .shop-map{margin-bottom:12px;height:260px;border-radius:12px;overflow:hidden;position:relative;background:var(--chip);}
+  .shop-map__placeholder{
+    width:100%;height:260px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    background:var(--chip);color:var(--muted);font-size:.9rem;border:1px dashed var(--line);
+  }
+  .shop-loc{font-size:.88rem;color:#5A4A38;margin:0 0 14px;display:flex;gap:8px;align-items:flex-start;}
+  .shop-loc svg{flex:0 0 auto;margin-top:2px;color:var(--green);}
+  .shop-nav{display:inline-flex;width:100%;justify-content:center;text-decoration:none;}
+
   /* ===== 响应式：桌面端 ===== */
   @media (min-width:720px){
     body{padding-top:70px;}
@@ -437,7 +488,7 @@
     </g>
   </svg>
 
-  <img class="hero__img" src="image.avif" alt="" decoding="async" onerror="this.remove()">
+  <img class="hero__img" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1600&auto=format&fit=crop" alt="" decoding="async" onerror="this.remove()">
   <div class="hero__inner">
     <span class="hero__badge">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
@@ -597,7 +648,18 @@
   <p>食堂与周边信息结合团队实测与公开资料整理，仅供决策参考。</p>
 </footer>
 
-<script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+/* ===== Supabase 连接配置（部署前请替换为你的项目信息） ===== */
+const SUPABASE_URL = "https://jgiskrolbbfjpthvmogn.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpnaXNrcm9sYmJmanB0aHZtb2duIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjY2MDUzMSwiZXhwIjoyMTA4MjM2NTMxfQ.cAhG1GTbTfI-W6yIQ_8ol6agTR1CeDWTOwNkTO728mE";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ===== 高德地图 JS API 配置（部署前请替换为你的高德 Key） ===== */
+const AMAP_KEY = "11b2aafa45db9f3b1acef08a3375bf35";
+
 (function(){
   "use strict";
 
@@ -624,6 +686,25 @@
 
   /* 口味 / 类型下拉筛选选项 */
   var FLAVOR_FILTERS = ["麻辣","清淡","面食","饭类","炸物","轻食"];
+
+  /* 窗口名 → stalls 表 id 映射（详情弹窗据此读取 menu/nutrition 与评论） */
+  var STALL_ID_MAP = {
+    "打菜窗口":"dacai",
+    "鲜擂擂擂饭社":"xianlei",
+    "鲍汁捞饭":"baozi",
+    "瓦香鸡":"waji",
+    "清禾拉面":"qinghe",
+    "比吉双拼饭":"biji",
+    "轻食":"qingshi",
+    "麻辣烫 / 麻辣拌":"malatang",
+    "奉天朱家小馆":"fengtian",
+    "卤肉饭 / 凉皮 / 肉夹馍":"lourou",
+    "荔枝鸡牛肉双拼饭":"lizhiji",
+    "韩之味":"hanzhiwei",
+    "汉堡工厂":"hanbao",
+    "一碗香小馄饨手工水饺":"yiwanxiang",
+    "民族食堂":"minzu"
+  };
 
   /* 第六食堂各层窗口（三楼为教工餐厅，不对学生开放，故不收录） */
   var CANTEENS = [
@@ -741,52 +822,78 @@
   var NEARBY_FILTERS = ["全部","步行 5 分钟内","性价比","夜宵党"];
 
   var SHOPS = [
+    // 坐标说明：lat = 纬度，lng = 经度。请为每家店填入真实坐标（当前为 null 占位），
+    // 填入后弹窗 OSM 地图标记与高德导航即可精确定位。
     {
       name:"麦当劳（教学区南门对过）", type:"快餐",
       desc:"教学区南门马路对过，出校即达，赶时间的好选择。",
-      price:"¥27", dist:"约 100m · 步行 1 分钟", source:"大工生存手册",
+      price:"¥27", dist:"约 100m · 步行 1 分钟", hours:"6:00–23:00（以实际为准）",
+      address:"大连理工大学开发区校区 麦当劳",
+      lat:39.08044, lng:121.81772,
+      source:"大工生存手册",
       cats:["步行 5 分钟内","性价比"]
     },
     {
       name:"罗森便利店（第七学生公寓 2 楼）", type:"便利店",
       desc:"预制盒饭、关东煮、饭团等，全天解馋。注意不支持玉兰卡支付。",
-      price:"¥15", dist:"校内 · 第七学生公寓", source:"大工生存手册",
+      price:"¥15", dist:"校内 · 第七学生公寓", hours:"24 小时",
+      address:"大连理工大学开发区校区 第七学生公寓 罗森",
+      lat:39.085182, lng:121.8214,
+      source:"大工生存手册",
       cats:["步行 5 分钟内","性价比","夜宵党"]
     },
     {
       name:"瑞幸咖啡（第七学生公寓 2 楼）", type:"咖啡",
       desc:"公寓楼下就有瑞幸；校外另有开发区校区店约 845m。",
-      price:"¥13", dist:"校内 / 约 845m", source:"大工生存手册 / 携程",
+      price:"¥13", dist:"校内 / 约 845m", hours:"7:00–21:00（以实际为准）",
+      address:"大连理工大学开发区校区 瑞幸咖啡",
+      lat:39.085073, lng:121.821526,
+      source:"大工生存手册 / 携程",
       cats:["步行 5 分钟内","性价比"]
     },
     {
       name:"知语山小区小饭馆群", type:"家常菜 / 面馆",
       desc:"牛肉面、水煮肉片等小饭馆，很多好吃不贵。",
-      price:"¥20", dist:"约 1km · 步行约 15 分钟", source:"大工生存手册",
+      price:"¥20", dist:"约 1km · 步行约 15 分钟", hours:"11:00–21:00（以实际为准）",
+      address:"大连开发区 知语山小区",
+      lat:39.08281, lng:121.822705,
+      source:"大工生存手册",
       cats:["性价比"]
     },
     {
       name:"知语山夜市（晚间）", type:"夜市",
       desc:"小区马路对过晚间有小型夜市，适合晚饭后加餐。",
-      price:"¥25", dist:"约 1km", source:"大工生存手册",
+      price:"¥25", dist:"约 1km", hours:"17:00–23:00（以实际为准）",
+      address:"大连开发区 知语山夜市",
+      lat:39.08281, lng:121.822705,
+      source:"大工生存手册",
       cats:["夜宵党"]
     },
     {
       name:"大连大学对面夜市 / 烧烤", type:"夜市 / 烧烤",
       desc:"沿学府大街向北步行约 1km，烧烤、各种饭馆、肯德基聚集。",
-      price:"¥30", dist:"约 1km · 步行", source:"大工生存手册",
+      price:"¥30", dist:"约 1km · 步行", hours:"16:00–次日 2:00（以实际为准）",
+      address:"大连大学 夜市",
+      lat:39.095484, lng:121.824052,
+      source:"大工生存手册",
       cats:["性价比","夜宵党"]
     },
     {
       name:"大连财经学院周边觅食", type:"综合",
       desc:"顺生活区北边小路可达，餐饮选择丰富，可结伴探索。",
-      price:"¥25", dist:"约 1–2km", source:"大工生存手册",
+      price:"¥25", dist:"约 1–2km", hours:"10:00–22:00（以实际为准）",
+      address:"大连财经学院",
+      lat:39.08719, lng:121.83188,
+      source:"大工生存手册",
       cats:["性价比"]
     },
     {
       name:"万达广场 / 安盛购物广场", type:"商圈",
       desc:"开发区商圈，打车或公交可达，餐厅选择多。",
-      price:"¥50", dist:"约 3.8km / 4.9km", source:"Trip.com / 携程",
+      price:"¥50", dist:"约 3.8km / 4.9km", hours:"10:00–22:00",
+      address:"大连开发区 万达广场",
+      lat:39.059808, lng:121.783216,
+      source:"Trip.com / 携程",
       cats:[]
     }
   ];
@@ -863,42 +970,204 @@
   ];
 
   /* 菜品营养估算库：kcal / protein(g) / carbs(g) / fat(g) / price(元) */
-  var NUTRI_DISHES = [
-    {name:"番茄爆蛋饭", vendor:"鲜擂擂擂饭社", kcal:520, protein:18, carbs:75, fat:16, price:9.9, tags:["高性价比","清淡"]},
+var NUTRI_DISHES = [
+    {name:"两荤一素（打菜）", vendor:"打菜窗口", kcal:700, protein:28, carbs:75, fat:26, price:15, tags:["高蛋白"]},
+    {name:"番茄爆蛋饭", vendor:"鲜擂擂擂饭社", kcal:520, protein:18, carbs:75, fat:16, price:9.9, tags:["清淡","高性价比"]},
     {name:"辣椒炒肉饭", vendor:"鲜擂擂擂饭社", kcal:720, protein:28, carbs:80, fat:30, price:14, tags:["高蛋白","高脂"]},
-    {name:"理工红烧肉饭", vendor:"鲜擂擂擂饭社", kcal:780, protein:25, carbs:78, fat:40, price:15, tags:["高脂"]},
+    {name:"理工红烧肉饭", vendor:"鲜擂擂擂饭社", kcal:780, protein:25, carbs:78, fat:40, price:15, tags:["高蛋白","高脂"]},
     {name:"川香辣子鸡饭", vendor:"鲜擂擂擂饭社", kcal:690, protein:30, carbs:75, fat:28, price:13, tags:["高蛋白"]},
+    {name:"干锅藕片香肉饭", vendor:"鲜擂擂擂饭社", kcal:700, protein:26, carbs:78, fat:30, price:13, tags:["高蛋白","高脂"]},
+    {name:"鸡腿爆芸豆饭", vendor:"鲜擂擂擂饭社", kcal:720, protein:30, carbs:75, fat:28, price:14, tags:["高蛋白"]},
+    {name:"鹿茸菌炒肉饭", vendor:"鲜擂擂擂饭社", kcal:680, protein:24, carbs:72, fat:30, price:15, tags:["高脂"]},
+    {name:"干锅土豆香肉饭", vendor:"鲜擂擂擂饭社", kcal:650, protein:22, carbs:76, fat:26, price:12, tags:["高性价比"]},
+    {name:"北乡溜肉段饭", vendor:"鲜擂擂擂饭社", kcal:740, protein:26, carbs:74, fat:34, price:15.8, tags:["高蛋白","高脂"]},
+    {name:"湘炒黄牛肉饭", vendor:"鲜擂擂擂饭社", kcal:720, protein:32, carbs:70, fat:30, price:18.8, tags:["高蛋白","高脂"]},
     {name:"鲍汁大鸡排饭", vendor:"鲍汁捞饭", kcal:750, protein:32, carbs:72, fat:33, price:13.9, tags:["高蛋白","高脂"]},
-    {name:"鲍汁炸鸡块饭", vendor:"鲍汁捞饭", kcal:700, protein:26, carbs:70, fat:32, price:12.9, tags:["高脂","高性价比"]},
-    {name:"金牌瓦香鸡", vendor:"瓦香鸡", kcal:720, protein:35, carbs:60, fat:30, price:15, tags:["高蛋白"]},
+    {name:"鲍汁炸鸡块饭", vendor:"鲍汁捞饭", kcal:700, protein:26, carbs:70, fat:32, price:12.9, tags:["高蛋白","高脂"]},
+    {name:"鲍汁碳烤梅花肉饭", vendor:"鲍汁捞饭", kcal:720, protein:26, carbs:72, fat:32, price:14.9, tags:["高蛋白","高脂"]},
+    {name:"猪肘肉捞饭", vendor:"鲍汁捞饭", kcal:750, protein:26, carbs:70, fat:36, price:14.9, tags:["高蛋白","高脂"]},
+    {name:"鲍汁烤鸡腿饭", vendor:"鲍汁捞饭", kcal:700, protein:30, carbs:70, fat:26, price:14.9, tags:["高蛋白"]},
+    {name:"梅菜香肉饭", vendor:"鲍汁捞饭", kcal:730, protein:24, carbs:74, fat:34, price:14.9, tags:["高脂"]},
+    {name:"川香碳烤猪脆骨饭", vendor:"鲍汁捞饭", kcal:690, protein:26, carbs:72, fat:28, price:13.9, tags:["高蛋白"]},
+    {name:"鲍汁碳烤五花肉饭", vendor:"鲍汁捞饭", kcal:760, protein:24, carbs:70, fat:38, price:14.9, tags:["高脂"]},
+    {name:"鲍汁烤鸡排饭", vendor:"鲍汁捞饭", kcal:690, protein:30, carbs:70, fat:24, price:13.9, tags:["高蛋白"]},
+    {name:"鲍汁炸大鸡腿饭", vendor:"鲍汁捞饭", kcal:780, protein:30, carbs:68, fat:38, price:15.9, tags:["高蛋白","高脂"]},
+    {name:"鲍汁手撕鸡捞饭", vendor:"鲍汁捞饭", kcal:650, protein:28, carbs:68, fat:24, price:12.9, tags:["高蛋白"]},
+    {name:"鲍汁炸猪排饭", vendor:"鲍汁捞饭", kcal:740, protein:26, carbs:70, fat:32, price:14.9, tags:["高蛋白","高脂"]},
+    {name:"鲍汁炸鸡柳饭", vendor:"鲍汁捞饭", kcal:680, protein:24, carbs:70, fat:28, price:12.9, tags:[]},
+    {name:"鲍汁海苔烤肉饭", vendor:"鲍汁捞饭", kcal:660, protein:24, carbs:70, fat:26, price:12.9, tags:[]},
+    {name:"金牌瓦香鸡", vendor:"瓦香鸡", kcal:720, protein:35, carbs:60, fat:30, price:15, tags:["高蛋白","高脂"]},
     {name:"瓦香素杂拌", vendor:"瓦香鸡", kcal:450, protein:12, carbs:55, fat:18, price:12, tags:["清淡","高性价比"]},
-    {name:"瓦香鱼", vendor:"瓦香鸡", kcal:650, protein:38, carbs:50, fat:22, price:16, tags:["高蛋白","低脂"]},
-    {name:"葱花面", vendor:"清禾拉面", kcal:380, protein:10, carbs:60, fat:8, price:6, tags:["清淡","低脂","高性价比"]},
-    {name:"牛肉面", vendor:"清禾拉面", kcal:620, protein:28, carbs:68, fat:18, price:12, tags:["高蛋白"]},
+    {name:"瓦香鱼", vendor:"瓦香鸡", kcal:650, protein:38, carbs:50, fat:22, price:16, tags:["高蛋白"]},
+    {name:"瓦香排骨", vendor:"瓦香鸡", kcal:760, protein:30, carbs:55, fat:34, price:18, tags:["高蛋白","高脂"]},
+    {name:"瓦香回锅肉", vendor:"瓦香鸡", kcal:720, protein:24, carbs:55, fat:32, price:16, tags:["高脂"]},
+    {name:"瓦香里脊", vendor:"瓦香鸡", kcal:700, protein:28, carbs:55, fat:28, price:15, tags:["高蛋白"]},
+    {name:"瓦香培根", vendor:"瓦香鸡", kcal:710, protein:22, carbs:55, fat:30, price:15, tags:["高脂"]},
+    {name:"瓦香花菜", vendor:"瓦香鸡", kcal:430, protein:10, carbs:40, fat:22, price:11, tags:["高性价比"]},
+    {name:"瓦香茄子", vendor:"瓦香鸡", kcal:450, protein:10, carbs:42, fat:24, price:11, tags:["高性价比"]},
+    {name:"瓦香土豆", vendor:"瓦香鸡", kcal:470, protein:10, carbs:48, fat:22, price:11, tags:["高性价比"]},
+    {name:"瓦香豆腐", vendor:"瓦香鸡", kcal:420, protein:14, carbs:30, fat:22, price:10, tags:["高性价比"]},
+    {name:"瓦香千叶豆腐", vendor:"瓦香鸡", kcal:440, protein:14, carbs:32, fat:24, price:10, tags:["高性价比"]},
+    {name:"葱花面", vendor:"清禾拉面", kcal:380, protein:10, carbs:60, fat:8, price:6, tags:["低脂","清淡","高性价比"]},
+    {name:"牛肉面", vendor:"清禾拉面", kcal:620, protein:28, carbs:68, fat:18, price:12, tags:["高蛋白","清淡","高性价比"]},
+    {name:"蔬菜面", vendor:"清禾拉面", kcal:400, protein:10, carbs:62, fat:8, price:8, tags:["低脂","清淡","高性价比"]},
+    {name:"酱骨面", vendor:"清禾拉面", kcal:620, protein:26, carbs:66, fat:20, price:12, tags:["高蛋白","清淡","高性价比"]},
+    {name:"小鸡蘑菇面", vendor:"清禾拉面", kcal:600, protein:26, carbs:64, fat:18, price:14, tags:["高蛋白","清淡"]},
+    {name:"酸菜牛肉面", vendor:"清禾拉面", kcal:620, protein:28, carbs:66, fat:18, price:14, tags:["高蛋白","清淡"]},
+    {name:"麻辣牛肉面", vendor:"清禾拉面", kcal:630, protein:28, carbs:66, fat:18, price:14, tags:["高蛋白","清淡"]},
+    {name:"剔骨肉汤面", vendor:"清禾拉面", kcal:610, protein:26, carbs:64, fat:18, price:14, tags:["高蛋白","清淡"]},
+    {name:"酸菜肥肠面", vendor:"清禾拉面", kcal:660, protein:22, carbs:64, fat:24, price:16, tags:[]},
+    {name:"剔骨肉炒面", vendor:"清禾拉面", kcal:650, protein:26, carbs:66, fat:20, price:14, tags:["高蛋白","清淡"]},
+    {name:"牛肉炒面", vendor:"清禾拉面", kcal:680, protein:28, carbs:68, fat:22, price:16, tags:["高蛋白"]},
+    {name:"尖椒肥肠炒面", vendor:"清禾拉面", kcal:670, protein:22, carbs:68, fat:24, price:16, tags:[]},
+    {name:"尖椒肉丝炒面", vendor:"清禾拉面", kcal:640, protein:24, carbs:66, fat:20, price:14, tags:["清淡"]},
+    {name:"麻酱拌面", vendor:"清禾拉面", kcal:540, protein:14, carbs:70, fat:18, price:10, tags:["清淡","高性价比"]},
+    {name:"麻辣拌面", vendor:"清禾拉面", kcal:540, protein:14, carbs:70, fat:18, price:10, tags:["清淡","高性价比"]},
+    {name:"口水鸡拌面", vendor:"清禾拉面", kcal:600, protein:24, carbs:66, fat:18, price:12, tags:["清淡","高性价比"]},
+    {name:"椒麻鸡拌面", vendor:"清禾拉面", kcal:620, protein:26, carbs:66, fat:20, price:14, tags:["高蛋白","清淡"]},
+    {name:"剔骨肉拌面", vendor:"清禾拉面", kcal:610, protein:26, carbs:66, fat:20, price:14, tags:["高蛋白","清淡"]},
+    {name:"牛肉拌面", vendor:"清禾拉面", kcal:660, protein:28, carbs:68, fat:22, price:16, tags:["高蛋白"]},
+    {name:"鸡蛋炸酱面", vendor:"清禾拉面", kcal:520, protein:14, carbs:72, fat:16, price:10, tags:["清淡","高性价比"]},
+    {name:"肉酱打卤面", vendor:"清禾拉面", kcal:580, protein:18, carbs:70, fat:20, price:12, tags:["清淡","高性价比"]},
+    {name:"茄子肉卤面", vendor:"清禾拉面", kcal:560, protein:14, carbs:70, fat:18, price:12, tags:["清淡","高性价比"]},
     {name:"双拼饭·锅包肉+西红柿鸡蛋", vendor:"比吉双拼饭", kcal:620, protein:22, carbs:70, fat:22, price:9, tags:["高性价比"]},
-    {name:"香煎鸡排谷物饭", vendor:"轻食·悦轻荷", kcal:520, protein:30, carbs:48, fat:15, price:12, tags:["高蛋白","清淡"]},
-    {name:"金枪鱼泥谷物饭", vendor:"轻食·悦轻荷", kcal:560, protein:32, carbs:46, fat:18, price:15, tags:["高蛋白"]},
-    {name:"自选轻餐（半斤）", vendor:"轻食·悦轻荷", kcal:320, protein:18, carbs:30, fat:10, price:8.4, tags:["清淡","低脂"]},
+    {name:"双拼饭·红烧肉+干锅花菜", vendor:"比吉双拼饭", kcal:660, protein:24, carbs:72, fat:24, price:11, tags:["高性价比"]},
+    {name:"双拼饭·大盘鸡+烧茄子", vendor:"比吉双拼饭", kcal:640, protein:24, carbs:72, fat:22, price:10, tags:["高性价比"]},
+    {name:"双拼饭·酱大骨+西红柿鸡蛋", vendor:"比吉双拼饭", kcal:620, protein:26, carbs:68, fat:22, price:11, tags:["高蛋白","高性价比"]},
+    {name:"香煎鸡排谷物饭", vendor:"轻食·悦轻荷", kcal:520, protein:30, carbs:48, fat:15, price:12, tags:["高蛋白","清淡","高性价比"]},
+    {name:"金枪鱼泥谷物饭", vendor:"轻食·悦轻荷", kcal:560, protein:32, carbs:46, fat:18, price:15, tags:["高蛋白","清淡"]},
+    {name:"自选轻餐（半斤）", vendor:"轻食·悦轻荷", kcal:320, protein:18, carbs:30, fat:10, price:8.4, tags:["低脂","清淡","高性价比"]},
+    {name:"照烧鸡腿谷物饭", vendor:"轻食·悦轻荷", kcal:530, protein:30, carbs:48, fat:16, price:13, tags:["高蛋白","清淡"]},
+    {name:"烧烤鸡腿谷物饭", vendor:"轻食·悦轻荷", kcal:540, protein:30, carbs:48, fat:16, price:13, tags:["高蛋白","清淡"]},
+    {name:"奥尔良鸡腿谷物饭", vendor:"轻食·悦轻荷", kcal:530, protein:30, carbs:48, fat:16, price:13, tags:["高蛋白","清淡"]},
+    {name:"孜然鸡胸谷物饭", vendor:"轻食·悦轻荷", kcal:520, protein:32, carbs:46, fat:14, price:13, tags:["高蛋白","清淡"]},
+    {name:"黑椒鸡腿谷物饭", vendor:"轻食·悦轻荷", kcal:530, protein:30, carbs:48, fat:16, price:13, tags:["高蛋白","清淡"]},
+    {name:"黑椒鸡胸谷物饭", vendor:"轻食·悦轻荷", kcal:520, protein:32, carbs:46, fat:14, price:13, tags:["高蛋白","清淡"]},
+    {name:"香煎鸡排意面", vendor:"轻食·悦轻荷", kcal:520, protein:28, carbs:55, fat:14, price:12, tags:["高蛋白","清淡","高性价比"]},
+    {name:"照烧鸡腿意面", vendor:"轻食·悦轻荷", kcal:530, protein:30, carbs:55, fat:14, price:13, tags:["高蛋白","清淡"]},
+    {name:"烧烤鸡腿意面", vendor:"轻食·悦轻荷", kcal:540, protein:30, carbs:55, fat:14, price:13, tags:["高蛋白","清淡"]},
+    {name:"奥尔良鸡腿意面", vendor:"轻食·悦轻荷", kcal:530, protein:30, carbs:55, fat:14, price:13, tags:["高蛋白","清淡"]},
+    {name:"孜然鸡胸意面", vendor:"轻食·悦轻荷", kcal:520, protein:30, carbs:55, fat:12, price:13, tags:["高蛋白","低脂","清淡"]},
+    {name:"黑椒鸡胸意面", vendor:"轻食·悦轻荷", kcal:520, protein:30, carbs:55, fat:12, price:13, tags:["高蛋白","低脂","清淡"]},
+    {name:"黑椒鸡腿意面", vendor:"轻食·悦轻荷", kcal:530, protein:30, carbs:55, fat:14, price:13, tags:["高蛋白","清淡"]},
+    {name:"金枪鱼泥意面", vendor:"轻食·悦轻荷", kcal:560, protein:30, carbs:52, fat:16, price:15, tags:["高蛋白","清淡"]},
+    {name:"香煎鸡排沙拉", vendor:"轻食·悦轻荷", kcal:430, protein:26, carbs:20, fat:20, price:12, tags:["高蛋白","清淡","高性价比"]},
+    {name:"烧烤鸡腿沙拉", vendor:"轻食·悦轻荷", kcal:450, protein:26, carbs:20, fat:22, price:13, tags:["高蛋白"]},
+    {name:"奥尔良鸡腿沙拉", vendor:"轻食·悦轻荷", kcal:440, protein:26, carbs:20, fat:20, price:13, tags:["高蛋白","清淡"]},
+    {name:"黑椒鸡胸沙拉", vendor:"轻食·悦轻荷", kcal:420, protein:28, carbs:18, fat:18, price:13, tags:["高蛋白","清淡"]},
+    {name:"孜然鸡胸沙拉", vendor:"轻食·悦轻荷", kcal:420, protein:28, carbs:18, fat:18, price:13, tags:["高蛋白","清淡"]},
     {name:"麻辣烫（半斤）", vendor:"麻辣烫·985", kcal:550, protein:20, carbs:55, fat:25, price:9.4, tags:["高性价比"]},
-    {name:"清汤面", vendor:"奉天朱家小馆", kcal:360, protein:10, carbs:58, fat:6, price:7, tags:["清淡","低脂","高性价比"]},
+    {name:"麻辣拌（半斤）", vendor:"麻辣烫·985", kcal:550, protein:20, carbs:55, fat:25, price:9.4, tags:["高性价比"]},
+    {name:"清汤面", vendor:"奉天朱家小馆", kcal:360, protein:10, carbs:58, fat:6, price:7, tags:["低脂","清淡","高性价比"]},
     {name:"筋头巴脑牛肉面", vendor:"奉天朱家小馆", kcal:680, protein:32, carbs:66, fat:22, price:16, tags:["高蛋白"]},
     {name:"招牌炸酱面", vendor:"奉天朱家小馆", kcal:580, protein:18, carbs:72, fat:22, price:10, tags:["高性价比"]},
-    {name:"凉皮", vendor:"卤肉饭·卤肉卷饼", kcal:400, protein:10, carbs:60, fat:12, price:8, tags:["清淡","低脂","高性价比"]},
-    {name:"招牌卤肉卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:650, protein:22, carbs:55, fat:32, price:12, tags:["高脂"]},
+    {name:"特色羊杂面", vendor:"奉天朱家小馆", kcal:600, protein:24, carbs:62, fat:20, price:12, tags:["清淡","高性价比"]},
+    {name:"辣肉面", vendor:"奉天朱家小馆", kcal:580, protein:20, carbs:64, fat:18, price:11, tags:["清淡","高性价比"]},
+    {name:"卤肉面", vendor:"奉天朱家小馆", kcal:640, protein:22, carbs:66, fat:22, price:14, tags:[]},
+    {name:"猪排面", vendor:"奉天朱家小馆", kcal:620, protein:24, carbs:64, fat:20, price:13, tags:["清淡"]},
+    {name:"鸡柳面", vendor:"奉天朱家小馆", kcal:600, protein:22, carbs:64, fat:18, price:12, tags:["清淡","高性价比"]},
+    {name:"肉燥汤面", vendor:"奉天朱家小馆", kcal:540, protein:16, carbs:68, fat:16, price:9, tags:["清淡","高性价比"]},
+    {name:"酸豆角汤面", vendor:"奉天朱家小馆", kcal:480, protein:10, carbs:68, fat:10, price:9, tags:["低脂","清淡","高性价比"]},
+    {name:"酸菜汤面", vendor:"奉天朱家小馆", kcal:480, protein:10, carbs:68, fat:10, price:9, tags:["低脂","清淡","高性价比"]},
+    {name:"混合炸酱面", vendor:"奉天朱家小馆", kcal:560, protein:16, carbs:72, fat:18, price:10, tags:["清淡","高性价比"]},
+    {name:"鸡蛋炸酱面", vendor:"奉天朱家小馆", kcal:520, protein:14, carbs:72, fat:16, price:9, tags:["清淡","高性价比"]},
+    {name:"辣番茄鸡蛋拌面", vendor:"奉天朱家小馆", kcal:520, protein:14, carbs:70, fat:16, price:10, tags:["清淡","高性价比"]},
+    {name:"辣肉拌面", vendor:"奉天朱家小馆", kcal:580, protein:20, carbs:64, fat:18, price:11, tags:["清淡","高性价比"]},
+    {name:"猪排麻酱拌面", vendor:"奉天朱家小馆", kcal:620, protein:24, carbs:64, fat:22, price:13, tags:[]},
+    {name:"麻酱鸡丝拌面", vendor:"奉天朱家小馆", kcal:540, protein:18, carbs:68, fat:16, price:10, tags:["清淡","高性价比"]},
+    {name:"肉燥拌面", vendor:"奉天朱家小馆", kcal:540, protein:16, carbs:68, fat:18, price:10, tags:["清淡","高性价比"]},
+    {name:"酸豆角拌面", vendor:"奉天朱家小馆", kcal:500, protein:10, carbs:70, fat:12, price:10, tags:["低脂","清淡","高性价比"]},
+    {name:"酸菜拌面", vendor:"奉天朱家小馆", kcal:500, protein:10, carbs:70, fat:12, price:10, tags:["低脂","清淡","高性价比"]},
+    {name:"鸡柳麻辣拌面", vendor:"奉天朱家小馆", kcal:580, protein:22, carbs:64, fat:18, price:12, tags:["清淡","高性价比"]},
+    {name:"麻辣拌面", vendor:"奉天朱家小馆", kcal:520, protein:12, carbs:70, fat:14, price:9, tags:["清淡","高性价比"]},
+    {name:"猪排麻辣拌面", vendor:"奉天朱家小馆", kcal:620, protein:24, carbs:64, fat:22, price:13, tags:[]},
+    {name:"凉皮", vendor:"卤肉饭·卤肉卷饼", kcal:400, protein:10, carbs:60, fat:12, price:8, tags:["低脂","清淡","高性价比"]},
+    {name:"招牌卤肉卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:650, protein:22, carbs:55, fat:32, price:12, tags:["高脂","高性价比"]},
+    {name:"素菜卷", vendor:"卤肉饭·卤肉卷饼", kcal:420, protein:10, carbs:55, fat:14, price:8, tags:["清淡","高性价比"]},
+    {name:"五香卤蛋卷/煎蛋", vendor:"卤肉饭·卤肉卷饼", kcal:500, protein:16, carbs:55, fat:20, price:10, tags:["清淡","高性价比"]},
+    {name:"川香鸡柳卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:560, protein:20, carbs:56, fat:22, price:11, tags:["高性价比"]},
+    {name:"火山石烤肠卷", vendor:"卤肉饭·卤肉卷饼", kcal:600, protein:20, carbs:56, fat:26, price:12, tags:["高性价比"]},
+    {name:"香酥鸡柳卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:600, protein:20, carbs:56, fat:24, price:12, tags:["高性价比"]},
+    {name:"秘制里脊卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:580, protein:22, carbs:56, fat:22, price:12, tags:["高性价比"]},
+    {name:"秘制肘子卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:640, protein:24, carbs:56, fat:28, price:13, tags:[]},
+    {name:"秘制五花肉卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:660, protein:22, carbs:56, fat:30, price:13, tags:["高脂"]},
+    {name:"京酱肉丝卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:620, protein:24, carbs:56, fat:24, price:13, tags:[]},
+    {name:"北京烤鸭卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:640, protein:26, carbs:56, fat:26, price:14, tags:["高蛋白"]},
+    {name:"麻辣牛肚卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:620, protein:24, carbs:56, fat:24, price:16, tags:[]},
+    {name:"酱香牛肉卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:640, protein:30, carbs:56, fat:22, price:16, tags:["高蛋白"]},
+    {name:"全家福卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:800, protein:32, carbs:58, fat:34, price:25, tags:["高蛋白","高脂"]},
+    {name:"五花肉肉夹馍", vendor:"卤肉饭·卤肉卷饼", kcal:480, protein:16, carbs:50, fat:22, price:8, tags:["高性价比"]},
+    {name:"纯瘦肉肉夹馍", vendor:"卤肉饭·卤肉卷饼", kcal:500, protein:20, carbs:50, fat:18, price:10, tags:["清淡","高性价比"]},
     {name:"招牌荔枝鸡", vendor:"荔枝鸡牛肉双拼饭", kcal:620, protein:30, carbs:65, fat:24, price:13, tags:["高蛋白"]},
     {name:"红烧牛肉饭", vendor:"荔枝鸡牛肉双拼饭", kcal:700, protein:35, carbs:62, fat:28, price:18, tags:["高蛋白"]},
-    {name:"韩式冷面", vendor:"韩之味", kcal:480, protein:15, carbs:70, fat:12, price:10, tags:["清淡","低脂"]},
-    {name:"石板豆腐", vendor:"韩之味", kcal:430, protein:18, carbs:20, fat:26, price:12, tags:["清淡","高性价比"]},
-    {name:"传统石锅拌饭", vendor:"韩之味", kcal:600, protein:18, carbs:80, fat:20, price:10, tags:["高性价比"]},
+    {name:"辣子鸡牛肉双拼饭", vendor:"荔枝鸡牛肉双拼饭", kcal:720, protein:32, carbs:66, fat:28, price:16, tags:["高蛋白"]},
+    {name:"荔枝鸡烧肉双拼饭", vendor:"荔枝鸡牛肉双拼饭", kcal:700, protein:26, carbs:66, fat:28, price:15, tags:["高蛋白"]},
+    {name:"酱骨荔枝鸡双拼饭", vendor:"荔枝鸡牛肉双拼饭", kcal:680, protein:28, carbs:64, fat:26, price:14, tags:["高蛋白"]},
+    {name:"辣子鸡烧肉双拼饭", vendor:"荔枝鸡牛肉双拼饭", kcal:700, protein:26, carbs:66, fat:28, price:15, tags:["高蛋白"]},
+    {name:"状元烧肉饭", vendor:"荔枝鸡牛肉双拼饭", kcal:720, protein:24, carbs:68, fat:30, price:14, tags:["高脂"]},
+    {name:"酱骨茄子双拼饭", vendor:"荔枝鸡牛肉双拼饭", kcal:640, protein:24, carbs:66, fat:22, price:13, tags:[]},
+    {name:"酱骨辣子鸡双拼饭", vendor:"荔枝鸡牛肉双拼饭", kcal:680, protein:28, carbs:64, fat:26, price:14, tags:["高蛋白"]},
+    {name:"川渝辣子鸡", vendor:"荔枝鸡牛肉双拼饭", kcal:660, protein:28, carbs:64, fat:26, price:14, tags:["高蛋白"]},
+    {name:"烧肉茄子双拼饭", vendor:"荔枝鸡牛肉双拼饭", kcal:640, protein:22, carbs:66, fat:24, price:13, tags:[]},
+    {name:"狮子头肉卷双拼饭", vendor:"荔枝鸡牛肉双拼饭", kcal:620, protein:22, carbs:68, fat:22, price:10.9, tags:["高性价比"]},
+    {name:"酱骨牛肉双拼饭", vendor:"荔枝鸡牛肉双拼饭", kcal:700, protein:32, carbs:62, fat:28, price:16, tags:["高蛋白"]},
+    {name:"荔枝鸡牛肉双拼饭", vendor:"荔枝鸡牛肉双拼饭", kcal:700, protein:30, carbs:66, fat:26, price:16, tags:["高蛋白"]},
+    {name:"酱骨烧肉双拼饭", vendor:"荔枝鸡牛肉双拼饭", kcal:700, protein:26, carbs:64, fat:28, price:15, tags:["高蛋白"]},
+    {name:"超级酱骨饭", vendor:"荔枝鸡牛肉双拼饭", kcal:640, protein:28, carbs:60, fat:26, price:12.9, tags:["高蛋白"]},
+    {name:"韩式冷面", vendor:"韩之味", kcal:480, protein:15, carbs:70, fat:12, price:10, tags:["低脂","清淡","高性价比"]},
+    {name:"石板豆腐", vendor:"韩之味", kcal:430, protein:18, carbs:20, fat:26, price:12, tags:["高性价比"]},
+    {name:"传统石锅拌饭", vendor:"韩之味", kcal:600, protein:18, carbs:80, fat:20, price:10, tags:["清淡","高性价比"]},
+    {name:"烤冷面（一面两蛋+肠）", vendor:"韩之味", kcal:480, protein:18, carbs:58, fat:18, price:8, tags:["清淡","高性价比"]},
+    {name:"鸡蛋灌饼（两蛋+肠）", vendor:"韩之味", kcal:500, protein:16, carbs:58, fat:20, price:8, tags:["清淡","高性价比"]},
+    {name:"手抓饼（两蛋+肠）", vendor:"韩之味", kcal:520, protein:16, carbs:58, fat:22, price:8, tags:["高性价比"]},
+    {name:"肉松紫菜包饭", vendor:"韩之味", kcal:420, protein:12, carbs:60, fat:14, price:8, tags:["清淡","高性价比"]},
+    {name:"奥尔良鸡肉紫菜包饭", vendor:"韩之味", kcal:480, protein:18, carbs:60, fat:16, price:10, tags:["清淡","高性价比"]},
+    {name:"金枪鱼紫菜包饭", vendor:"韩之味", kcal:460, protein:18, carbs:58, fat:16, price:10, tags:["清淡","高性价比"]},
+    {name:"石板土豆片", vendor:"韩之味", kcal:450, protein:10, carbs:40, fat:24, price:12, tags:["高性价比"]},
+    {name:"石板鸡蛋", vendor:"韩之味", kcal:430, protein:14, carbs:25, fat:26, price:13, tags:[]},
+    {name:"石板肉沫茄子", vendor:"韩之味", kcal:500, protein:16, carbs:30, fat:32, price:14, tags:["高脂"]},
+    {name:"石板小酥肉", vendor:"韩之味", kcal:560, protein:22, carbs:30, fat:34, price:14, tags:["高脂"]},
+    {name:"石板鸡排土豆条", vendor:"韩之味", kcal:600, protein:26, carbs:38, fat:32, price:15, tags:["高蛋白","高脂"]},
+    {name:"石板酸菜肉", vendor:"韩之味", kcal:560, protein:22, carbs:32, fat:32, price:15, tags:["高脂"]},
+    {name:"石板金针菇肥牛", vendor:"韩之味", kcal:560, protein:28, carbs:30, fat:30, price:16, tags:["高蛋白","高脂"]},
+    {name:"奥尔良鸡肉拌饭", vendor:"韩之味", kcal:640, protein:26, carbs:78, fat:22, price:14, tags:["高蛋白"]},
+    {name:"肉酱石锅拌饭", vendor:"韩之味", kcal:620, protein:22, carbs:78, fat:22, price:14, tags:[]},
+    {name:"咖喱鸡排石锅饭", vendor:"韩之味", kcal:660, protein:24, carbs:80, fat:24, price:14, tags:[]},
+    {name:"番茄鸡排石锅饭", vendor:"韩之味", kcal:640, protein:24, carbs:78, fat:22, price:14, tags:[]},
+    {name:"金枪鱼石锅拌饭", vendor:"韩之味", kcal:620, protein:28, carbs:74, fat:22, price:18, tags:["高蛋白"]},
     {name:"香辣鸡腿堡×2", vendor:"汉堡工厂", kcal:800, protein:34, carbs:60, fat:42, price:10, tags:["高蛋白","高脂","高性价比"]},
-    {name:"黄金脆壳鸡", vendor:"汉堡工厂", kcal:550, protein:26, carbs:30, fat:32, price:8, tags:["高脂"]},
-    {name:"猪肉小馄饨", vendor:"一碗香小馄饨手工水饺", kcal:500, protein:24, carbs:55, fat:18, price:13, tags:["高性价比"]},
+    {name:"黄金脆壳鸡", vendor:"汉堡工厂", kcal:550, protein:26, carbs:30, fat:32, price:8, tags:["高蛋白","高脂","高性价比"]},
+    {name:"藤椒鸡腿堡+鸡米花+可乐", vendor:"汉堡工厂", kcal:680, protein:26, carbs:58, fat:30, price:12, tags:["高蛋白","高脂","高性价比"]},
+    {name:"香辣鸡腿堡+黑椒鸡块+可乐", vendor:"汉堡工厂", kcal:680, protein:26, carbs:58, fat:30, price:12, tags:["高蛋白","高脂","高性价比"]},
+    {name:"PAD大鸡排", vendor:"汉堡工厂", kcal:560, protein:26, carbs:32, fat:30, price:10, tags:["高蛋白","高脂","高性价比"]},
+    {name:"金脆薯趣套餐", vendor:"汉堡工厂", kcal:640, protein:22, carbs:60, fat:28, price:12, tags:["高性价比"]},
+    {name:"脆壳缤纷桶", vendor:"汉堡工厂", kcal:800, protein:30, carbs:60, fat:40, price:17.8, tags:["高蛋白","高脂"]},
+    {name:"脆壳满分桶", vendor:"汉堡工厂", kcal:880, protein:34, carbs:62, fat:44, price:19.9, tags:["高蛋白","高脂"]},
+    {name:"巨量纯肉狂欢桶", vendor:"汉堡工厂", kcal:1100, protein:40, carbs:70, fat:52, price:27.8, tags:["高蛋白","高脂"]},
+    {name:"超值四件套A", vendor:"汉堡工厂", kcal:720, protein:28, carbs:62, fat:30, price:15, tags:["高蛋白","高脂"]},
+    {name:"超值四件套B", vendor:"汉堡工厂", kcal:760, protein:30, carbs:62, fat:32, price:17, tags:["高蛋白","高脂"]},
+    {name:"爆脆酥套餐A", vendor:"汉堡工厂", kcal:700, protein:28, carbs:56, fat:32, price:14, tags:["高蛋白","高脂"]},
+    {name:"辣金全明星", vendor:"汉堡工厂", kcal:760, protein:30, carbs:60, fat:34, price:16, tags:["高蛋白","高脂"]},
+    {name:"大大大鸡排", vendor:"汉堡工厂", kcal:720, protein:30, carbs:56, fat:32, price:16, tags:["高蛋白","高脂"]},
+    {name:"优选套餐A", vendor:"汉堡工厂", kcal:660, protein:26, carbs:56, fat:28, price:12, tags:["高蛋白","高性价比"]},
+    {name:"优选套餐B", vendor:"汉堡工厂", kcal:640, protein:24, carbs:60, fat:26, price:12, tags:["高性价比"]},
+    {name:"猪肉小馄饨", vendor:"一碗香小馄饨手工水饺", kcal:500, protein:24, carbs:55, fat:18, price:13, tags:["清淡"]},
     {name:"韭菜鸡蛋水饺", vendor:"一碗香小馄饨手工水饺", kcal:500, protein:14, carbs:58, fat:20, price:13, tags:["清淡"]},
     {name:"肉三鲜水饺", vendor:"一碗香小馄饨手工水饺", kcal:620, protein:28, carbs:55, fat:28, price:18, tags:["高蛋白"]},
-    {name:"烤盘饭（荤素称重）", vendor:"一碗香小馄饨手工水饺", kcal:600, protein:25, carbs:65, fat:22, price:9.9, tags:["高性价比"]},
+    {name:"烤盘饭（荤素称重）", vendor:"一碗香小馄饨手工水饺", kcal:600, protein:25, carbs:65, fat:22, price:9.9, tags:["高蛋白","高性价比"]},
+    {name:"鸡汁小馄饨", vendor:"一碗香小馄饨手工水饺", kcal:500, protein:22, carbs:55, fat:18, price:13, tags:["清淡"]},
+    {name:"猪肉玉米小馄饨", vendor:"一碗香小馄饨手工水饺", kcal:520, protein:24, carbs:56, fat:18, price:13, tags:["清淡"]},
+    {name:"牛肉小馄饨", vendor:"一碗香小馄饨手工水饺", kcal:540, protein:26, carbs:54, fat:20, price:16, tags:["高蛋白","清淡"]},
+    {name:"猪肉虾仁小馄饨", vendor:"一碗香小馄饨手工水饺", kcal:560, protein:28, carbs:52, fat:22, price:18, tags:["高蛋白"]},
+    {name:"猪肉酸菜水饺", vendor:"一碗香小馄饨手工水饺", kcal:560, protein:22, carbs:56, fat:22, price:15, tags:[]},
+    {name:"猪肉白菜水饺", vendor:"一碗香小馄饨手工水饺", kcal:560, protein:22, carbs:56, fat:22, price:15, tags:[]},
+    {name:"香菇鲜肉水饺", vendor:"一碗香小馄饨手工水饺", kcal:560, protein:22, carbs:56, fat:22, price:15, tags:[]},
+    {name:"茴香鲜肉水饺", vendor:"一碗香小馄饨手工水饺", kcal:560, protein:22, carbs:56, fat:22, price:15, tags:[]},
+    {name:"鲜肉玉米水饺", vendor:"一碗香小馄饨手工水饺", kcal:560, protein:22, carbs:56, fat:22, price:15, tags:[]},
+    {name:"鲜肉大葱水饺", vendor:"一碗香小馄饨手工水饺", kcal:560, protein:22, carbs:56, fat:22, price:15, tags:[]},
+    {name:"猪肉芹菜水饺", vendor:"一碗香小馄饨手工水饺", kcal:560, protein:22, carbs:56, fat:22, price:15, tags:[]},
     {name:"牛肉汤", vendor:"民族餐厅", kcal:350, protein:30, carbs:10, fat:18, price:14, tags:["高蛋白","清淡"]},
-    {name:"牛肉面", vendor:"民族餐厅", kcal:640, protein:30, carbs:66, fat:20, price:16, tags:["高蛋白"]},
-    {name:"两荤一素（打菜）", vendor:"打菜窗口", kcal:700, protein:28, carbs:75, fat:26, price:15, tags:["高性价比"]}
+    {name:"牛肉面", vendor:"民族餐厅", kcal:640, protein:30, carbs:66, fat:20, price:16, tags:["高蛋白","清淡"]},
   ];
 
   /* =========================================================
@@ -960,7 +1229,7 @@
     });
     var grid = el("canteen-grid");
     grid.innerHTML = list.map(function(c){
-      return '<article class="card">'+
+      return '<article class="card card--clickable" data-stall="'+esc(c.name)+'" tabindex="0" role="button" aria-label="查看 '+esc(c.name)+' 详情">'+
         '<div class="card__top"><h2 class="card__name">'+esc(c.name)+'</h2>'+
         '<div style="display:flex;gap:6px;flex-wrap:wrap;">'+
         '<span class="tag tag--green">'+esc(c.floor)+'</span>'+
@@ -1054,7 +1323,7 @@
     var list = SHOPS.filter(function(s){ return cat==="全部" || s.cats.indexOf(cat)>=0; });
     var grid = el("nearby-grid");
     grid.innerHTML = list.map(function(s){
-      return '<article class="card shop-card">'+
+      return '<article class="card shop-card card--clickable" data-shop="'+esc(s.name)+'" tabindex="0" role="button" aria-label="查看 '+esc(s.name)+' 详情">'+
         '<div class="card__top"><h2 class="card__name">'+esc(s.name)+'</h2>'+
         '<span class="tag tag--green">'+esc(s.type)+'</span></div>'+
         '<p class="card__desc">'+esc(s.desc)+'</p>'+
@@ -1065,6 +1334,96 @@
         '<p class="card__source">来源标注：'+esc(s.source)+'</p>'+
       '</article>';
     }).join("");
+  }
+
+  /* =========================================================
+   * 周边店铺详情弹窗
+   * ========================================================= */
+  function findShop(name){
+    for(var i=0;i<SHOPS.length;i++){ if(SHOPS[i].name===name) return SHOPS[i]; }
+    return null;
+  }
+
+  /* 高德地图：实例与加载状态（生命周期管理） */
+  var shopMapInstance = null;
+  var shopMapToken = 0;
+
+  function loadAMap(cb){
+    if(window.AMap){ cb(true); return; }
+    if(!AMAP_KEY || AMAP_KEY === "你的高德Key"){ cb(false); return; }
+    if(window.__amapLoading){ return; }
+    window.__amapLoading = true;
+    var s = document.createElement('script');
+    s.src = 'https://webapi.amap.com/maps?v=2.0&key=' + encodeURIComponent(AMAP_KEY) + '&plugin=AMap.Marker,AMap.Scale';
+    s.onload = function(){ window.__amapLoading = false; cb(true); };
+    s.onerror = function(){ window.__amapLoading = false; cb(false); };
+    document.head.appendChild(s);
+  }
+
+  function destroyShopMap(){
+    if(shopMapInstance){
+      try { shopMapInstance.destroy(); } catch(e){}
+      shopMapInstance = null;
+    }
+  }
+
+  function openShopModal(shop){
+    if(!shop) return;
+    destroyShopMap();
+    shopMapToken++;
+    var token = shopMapToken;
+
+    el("shop-title").textContent = shop.name;
+    el("shop-info").innerHTML =
+      '<span class="meta-item">'+svgIcon("yuan")+'<span>人均 <span class="price">'+esc(shop.price)+'</span></span></span>'+
+      '<span class="meta-item">'+svgIcon("clock")+esc(shop.hours || "营业时段待补充")+'</span>'+
+      '<span class="meta-item">'+svgIcon("pin")+'<span class="dist">'+esc(shop.dist)+'</span></span>';
+
+    var lat = parseFloat(shop.lat), lng = parseFloat(shop.lng);
+    var mapBox = el("shop-map");
+    mapBox.innerHTML = '';
+    var hasCoord = !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0;
+    if(hasCoord){
+      mapBox.innerHTML = '<div class="shop-map__placeholder">地图加载中…</div>';
+      loadAMap(function(ok){
+        if(token !== shopMapToken) return;
+        if(el("shop-modal").hidden) return;
+        if(!ok){
+          mapBox.innerHTML = '<div class="shop-map__placeholder">地图暂不可用（未配置高德 Key 或加载失败）</div>';
+          return;
+        }
+        try {
+          var map = new AMap.Map(mapBox, { center: [lng, lat], zoom: 15, resizeEnable: true });
+          var marker = new AMap.Marker({ position: [lng, lat], title: shop.name, anchor: 'bottom-center' });
+          map.add(marker);
+          map.setFitView([marker], false, [60, 60, 60, 60]);
+          shopMapInstance = map;
+        } catch(e){
+          mapBox.innerHTML = '<div class="shop-map__placeholder">地图加载失败</div>';
+        }
+      });
+    } else {
+      mapBox.innerHTML = '<div class="shop-map__placeholder">坐标缺失，地图暂不可用</div>';
+    }
+
+    el("shop-loc").innerHTML = svgIcon("pin")+'<span>'+esc(shop.address || shop.name)+' · 距学校 '+esc(shop.dist)+'</span>';
+
+    var nav = el("shop-nav");
+    if(hasCoord){
+      nav.href = "https://uri.amap.com/marker?position=" + lng + "," + lat + "&name=" + encodeURIComponent(shop.name);
+    } else {
+      nav.href = "https://uri.amap.com/search?keyword=" + encodeURIComponent(shop.address || shop.name);
+    }
+
+    el("shop-modal").hidden = false;
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeShopModal(){
+    destroyShopMap();
+    shopMapToken++;
+    el("shop-modal").hidden = true;
+    document.body.style.overflow = "";
   }
 
   /* =========================================================
@@ -1270,6 +1629,191 @@
   }
 
   /* =========================================================
+   * 摊位详情弹窗 + 评论评分
+   * ========================================================= */
+  var currentStallId = null;
+  var currentStallName = null;
+  var currentStar = 0;
+
+  function starSvg(filled, size){
+    var color = filled ? "#E8A23D" : "#D9CDB8";
+    return '<svg viewBox="0 0 24 24" width="'+size+'" height="'+size+'" fill="'+color+'" aria-hidden="true"><path d="M12 2.5l2.9 5.9 6.5.95-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.05 1.1-6.5-4.7-4.6 6.5-.95z"/></svg>';
+  }
+  function starsHtml(n, size){
+    size = size || 14;
+    var html = "";
+    for(var i=1;i<=5;i++){ html += starSvg(i<=n, size); }
+    return html;
+  }
+  function formatTime(d){
+    function pad(x){ return (x<10?"0":"")+x; }
+    return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+" "+pad(d.getHours())+":"+pad(d.getMinutes());
+  }
+  function showFormMsg(text, isError){
+    var m = el("form-msg");
+    m.textContent = text;
+    m.className = "form-msg " + (isError ? "form-msg--error" : "form-msg--ok");
+    m.hidden = false;
+  }
+  function hideFormMsg(){ el("form-msg").hidden = true; }
+
+  function renderStarPicker(){
+    var box = el("star-picker");
+    box.innerHTML = "";
+    for(var i=1;i<=5;i++){
+      (function(val){
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "star-btn";
+        b.innerHTML = starSvg(val<=currentStar, 28);
+        b.setAttribute("aria-label", val+" 星");
+        b.addEventListener("click", function(){
+          currentStar = val;
+          renderStarPicker();
+        });
+        box.appendChild(b);
+      })(i);
+    }
+  }
+
+  /* 从 stalls 表的 menu / nutrition 渲染菜品列表 */
+  function renderStallMenu(menu, nutrition){
+    var box = el("modal-dishes");
+    var nutMap = {};
+    if(nutrition && Array.isArray(nutrition.items)){
+      nutrition.items.forEach(function(n){ if(n && n.name) nutMap[n.name] = n; });
+    }
+    // 兜底：数据库 nutrition 缺失时，用本地营养智库估算数据补齐
+    var localNutMap = {};
+    NUTRI_DISHES.forEach(function(d){ if(d.name && !localNutMap[d.name]) localNutMap[d.name] = d; });
+    var cats = (menu && Array.isArray(menu.categories)) ? menu.categories : null;
+    if(!cats || cats.length===0){
+      box.innerHTML = '<p class="modal-empty">该窗口暂无菜单数据。</p>';
+      return;
+    }
+    var html = "";
+    cats.forEach(function(cat){
+      var items = Array.isArray(cat.items) ? cat.items : [];
+      html += '<div class="modal-cat">'+esc(cat.category || "菜品")+'</div>';
+      items.forEach(function(it){
+        var nut = nutMap[it.name] || localNutMap[it.name];
+        var nutStr = nut ? (nut.kcal+' kcal · 蛋白 '+nut.protein+'g · 碳水 '+nut.carbs+'g · 脂肪 '+nut.fat+'g') : '营养数据待补充';
+        var note = it.note ? ' · '+it.note : '';
+        html += '<div class="modal-dish">'+
+          '<span class="modal-dish__name">'+esc(it.name)+(note ? '<span class="modal-dish__note">'+esc(note)+'</span>' : '')+'</span>'+
+          '<span class="modal-dish__meta">¥'+it.price+' · '+nutStr+'</span>'+
+        '</div>';
+      });
+    });
+    box.innerHTML = html;
+  }
+
+  function renderReviews(list){
+    var box = el("modal-reviews");
+    var ratingBox = el("modal-rating");
+    if(!list || list.length===0){
+      ratingBox.innerHTML = '<span class="modal-count">暂无评分</span>';
+      box.innerHTML = '<p class="modal-empty">还没有点评，来抢第一条吧。</p>';
+      return;
+    }
+    var sum = 0;
+    list.forEach(function(r){ sum += (r.score||0); });
+    var avg = sum / list.length;
+    ratingBox.innerHTML =
+      '<span class="modal-avg">'+avg.toFixed(1)+'</span>'+
+      '<span class="modal-stars">'+starsHtml(Math.round(avg))+'</span>'+
+      '<span class="modal-count">/ 5.0 · '+list.length+' 条点评</span>';
+    box.innerHTML = list.map(function(r){
+      var d = r.created_at ? new Date(r.created_at) : null;
+      var time = d && !isNaN(d) ? formatTime(d) : "";
+      return '<div class="review">'+
+        '<div class="review__head"><span class="review__stars">'+starsHtml(r.score||0)+'</span><span class="review__time">'+time+'</span></div>'+
+        (r.content ? '<p class="review__content">'+esc(r.content)+'</p>' : '<p class="review__content review__content--empty">（未填写内容）</p>')+
+      '</div>';
+    }).join("");
+  }
+
+  async function loadReviews(stallId){
+    var box = el("modal-reviews");
+    var ratingBox = el("modal-rating");
+    box.innerHTML = '<p class="modal-empty">评论加载中…</p>';
+    ratingBox.innerHTML = '';
+    try {
+      var res = await supabase
+        .from('stall_reviews')
+        .select('*')
+        .eq('stall_id', stallId)
+        .order('created_at', { ascending: false });
+      if(res.error) throw res.error;
+      renderReviews(res.data || []);
+    } catch(e){
+      box.innerHTML = '<p class="modal-empty">评论加载失败，请稍后重试。</p>';
+    }
+  }
+
+  async function submitReview(){
+    if(!currentStallId) return;
+    if(currentStar===0){
+      showFormMsg("请先选择星级评分", true);
+      return;
+    }
+    var content = el("review-input").value.trim();
+    var btn = el("review-submit");
+    btn.disabled = true;
+    try {
+      var res = await supabase
+        .from('stall_reviews')
+        .insert({ stall_id: currentStallId, score: currentStar, content: content });
+      if(res.error) throw res.error;
+      currentStar = 0;
+      el("review-input").value = "";
+      hideFormMsg();
+      renderStarPicker();
+      loadReviews(currentStallId);
+    } catch(e){
+      showFormMsg("网络错误，评论提交失败", true);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function openStallModal(stallId, stallName){
+    currentStallId = stallId;
+    currentStallName = stallName;
+    currentStar = 0;
+    el("modal-title").textContent = stallName;
+    el("modal-dishes").innerHTML = '<p class="modal-empty">菜单加载中…</p>';
+    el("modal-rating").innerHTML = '';
+    el("modal-reviews").innerHTML = '<p class="modal-empty">评论加载中…</p>';
+    renderStarPicker();
+    el("review-input").value = "";
+    hideFormMsg();
+    el("stall-modal").hidden = false;
+    document.body.style.overflow = "hidden";
+
+    try {
+      var res = await supabase.from('stalls').select('menu, nutrition').eq('id', stallId).maybeSingle();
+      if(res.error) throw res.error;
+      if(res.data){
+        renderStallMenu(res.data.menu, res.data.nutrition);
+      } else {
+        el("modal-dishes").innerHTML = '<p class="modal-empty">该窗口暂无菜单数据。</p>';
+      }
+    } catch(e){
+      el("modal-dishes").innerHTML = '<p class="modal-empty">菜单加载失败，请稍后重试。</p>';
+    }
+
+    loadReviews(stallId);
+  }
+
+  function closeStallModal(){
+    el("stall-modal").hidden = true;
+    document.body.style.overflow = "";
+    currentStallId = null;
+    currentStallName = null;
+  }
+
+  /* =========================================================
    * Tab 切换
    * ========================================================= */
   function initTabs(){
@@ -1296,6 +1840,54 @@
     initNutri();
 
     el("pick-btn").addEventListener("click", pickToday);
+
+    // 食堂窗口卡片点击 → 打开详情弹窗（事件委托，name → stall_id）
+    el("canteen-grid").addEventListener("click", function(e){
+      var card = e.target.closest('.card[data-stall]');
+      if(card){
+        var name = card.getAttribute("data-stall");
+        openStallModal(STALL_ID_MAP[name] || name, name);
+      }
+    });
+    el("canteen-grid").addEventListener("keydown", function(e){
+      if(e.key === "Enter" || e.key === " "){
+        var card = e.target.closest('.card[data-stall]');
+        if(card){
+          e.preventDefault();
+          var name = card.getAttribute("data-stall");
+          openStallModal(STALL_ID_MAP[name] || name, name);
+        }
+      }
+    });
+
+    // 弹窗：关闭 / 遮罩 / Esc / 提交
+    el("modal-close").addEventListener("click", closeStallModal);
+    el("stall-modal").addEventListener("click", function(e){
+      if(e.target === el("stall-modal")) closeStallModal();
+    });
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape"){
+        if(!el("stall-modal").hidden) closeStallModal();
+        if(!el("shop-modal").hidden) closeShopModal();
+      }
+    });
+    el("review-submit").addEventListener("click", submitReview);
+
+    // 周边店铺卡片点击 → 打开详情弹窗（事件委托）
+    el("nearby-grid").addEventListener("click", function(e){
+      var card = e.target.closest('.card[data-shop]');
+      if(card){ openShopModal(findShop(card.getAttribute("data-shop"))); }
+    });
+    el("nearby-grid").addEventListener("keydown", function(e){
+      if(e.key === "Enter" || e.key === " "){
+        var card = e.target.closest('.card[data-shop]');
+        if(card){ e.preventDefault(); openShopModal(findShop(card.getAttribute("data-shop"))); }
+      }
+    });
+    el("shop-modal-close").addEventListener("click", closeShopModal);
+    el("shop-modal").addEventListener("click", function(e){
+      if(e.target === el("shop-modal")) closeShopModal();
+    });
 
     // 口味 / 类型下拉筛选
     el("canteen-flavor").addEventListener("change", function(){
@@ -1333,8 +1925,50 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", init);
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
 </script>
+
+<!-- ===== 摊位详情弹窗 ===== -->
+<div class="modal-overlay" id="stall-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" id="modal-close" type="button" aria-label="关闭">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <h2 class="modal-title" id="modal-title"></h2>
+    <div class="modal-rating" id="modal-rating"></div>
+    <h3 class="modal-sub">本窗口菜品</h3>
+    <div class="modal-dishes" id="modal-dishes"></div>
+    <h3 class="modal-sub">食客点评</h3>
+    <div class="modal-reviews" id="modal-reviews"></div>
+    <h3 class="modal-sub">写点评</h3>
+    <div class="modal-form">
+      <div class="star-picker" id="star-picker" role="radiogroup" aria-label="选择星级"></div>
+      <textarea id="review-input" class="review-input" rows="2" placeholder="说说你的用餐体验（可留空）"></textarea>
+      <p class="form-msg" id="form-msg" hidden></p>
+      <button class="btn" id="review-submit" type="button">提交评论</button>
+    </div>
+    <p class="modal-note">评分与评论数据存储在云端数据库，跨设备同步。</p>
+  </div>
+</div>
+
+<!-- ===== 周边店铺详情弹窗 ===== -->
+<div class="modal-overlay" id="shop-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shop-title">
+    <button class="modal-close" id="shop-modal-close" type="button" aria-label="关闭">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <h2 class="modal-title" id="shop-title"></h2>
+    <div class="shop-info" id="shop-info"></div>
+    <div class="shop-map" id="shop-map"></div>
+    <p class="shop-loc" id="shop-loc"></p>
+    <a class="btn shop-nav" id="shop-nav" target="_blank" rel="noopener">打开高德导航</a>
+  </div>
+</div>
+
 </body>
 </html>
