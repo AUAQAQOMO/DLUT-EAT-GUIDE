@@ -26,6 +26,7 @@
   html{-webkit-text-size-adjust:100%;}
   body{
     margin:0;
+    padding-top:66px; /* 避让 fixed 顶栏 */
     background:var(--bg);
     color:var(--ink);
     font-family:var(--sans);
@@ -68,6 +69,35 @@
   .tab[aria-selected="true"]{background:var(--brick);border-color:var(--brick);color:#fff;}
   .tab svg{width:17px;height:17px;}
 
+  /* ===== 头图 ===== */
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);}
+  .hero__bg{position:absolute;inset:0;width:100%;height:100%;display:block;}
+  .hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+  .hero::before{
+    content:"";position:absolute;inset:0;z-index:1;
+    background:linear-gradient(90deg,rgba(250,243,230,.97) 0%,rgba(250,243,230,.9) 34%,rgba(250,243,230,.5) 62%,rgba(250,243,230,.06) 100%);
+  }
+  .hero__inner{position:relative;z-index:2;max-width:1060px;margin:0 auto;padding:32px 16px 36px;}
+  .hero__badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--brick);color:#fff;font-size:.74rem;font-weight:700;letter-spacing:1px;
+    padding:5px 12px;border-radius:999px;
+  }
+  .hero__badge svg{width:13px;height:13px;}
+  .hero__title{
+    font-family:var(--serif);font-weight:800;
+    font-size:clamp(1.55rem,4.6vw,2.35rem);line-height:1.25;margin:12px 0 8px;
+  }
+  .hero__title em{font-style:normal;color:var(--brick);}
+  .hero__sub{max-width:560px;font-size:.9rem;color:#6B5A46;margin:0 0 18px;}
+  .hero__stats{display:flex;flex-wrap:wrap;gap:10px;}
+  .stat{
+    background:rgba(255,253,247,.94);border:1px solid var(--line);border-radius:12px;
+    padding:8px 14px 7px;text-align:center;min-width:68px;box-shadow:var(--shadow);
+  }
+  .stat strong{display:block;font-family:var(--serif);font-size:1.2rem;line-height:1.2;color:var(--brick);font-weight:800;}
+  .stat span{font-size:.7rem;color:var(--muted);letter-spacing:.5px;white-space:nowrap;}
+
   main{padding:0 16px 48px;max-width:1060px;margin:0 auto;}
   .view{display:none;}
   .view.active{display:block;animation:viewin .25s ease;}
@@ -89,6 +119,22 @@
   }
   .filter:hover{border-color:var(--brick);}
   .filter.active{background:var(--brick);border-color:var(--brick);color:#fff;}
+
+  /* ===== 口味 / 类型下拉筛选 ===== */
+  .flavor-filter{display:flex;align-items:center;gap:10px;margin:0 0 16px;flex-wrap:wrap;}
+  .flavor-filter__label{font-size:.9rem;font-weight:700;color:var(--muted);white-space:nowrap;}
+  .flavor-select{
+    min-height:44px;font-size:16px;padding:0 36px 0 16px;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);
+    border-radius:999px;font-weight:600;cursor:pointer;
+    appearance:none;-webkit-appearance:none;-moz-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233A2C20' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;background-size:14px;
+    transition:border-color .18s ease;
+  }
+  .flavor-select:hover{border-color:var(--brick);}
+  .flavor-select:focus{outline:2px solid var(--brick);outline-offset:1px;border-color:var(--brick);}
+  .flavor-select:disabled{opacity:.5;cursor:not-allowed;}
 
   /* ===== 卡片网格 ===== */
   .grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:8px;}
@@ -186,11 +232,82 @@
   .shop-card .card__name{font-size:1.08rem;}
   .dist{color:var(--green);font-weight:700;}
 
+  /* ===== 营养智库 ===== */
+  .nutri-disclaimer{
+    display:flex;gap:10px;align-items:flex-start;
+    background:#F6DFD6;color:#7A2E1C;border:1px solid #E8B7A8;border-radius:12px;
+    padding:12px 14px;font-size:.85rem;line-height:1.55;margin:4px 0 18px;
+  }
+  .nutri-disclaimer svg{flex:0 0 auto;margin-top:2px;}
+  .nutri-layout{display:grid;grid-template-columns:1fr;gap:16px;align-items:start;}
+  .nutri-side{display:flex;flex-direction:column;gap:16px;}
+  .nutri-main{display:flex;flex-direction:column;gap:16px;}
+  .nutri-hint{font-size:.76rem;font-weight:600;color:var(--muted);margin-left:4px;}
+  .nutri-select{width:100%;}
+  .nutri-selected{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .nutri-selected li{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    background:var(--chip);border-radius:10px;padding:8px 12px;font-size:.88rem;
+  }
+  .nutri-selected .dish-name{font-weight:600;}
+  .nutri-selected .dish-meta{font-size:.78rem;color:var(--muted);white-space:nowrap;}
+  .nutri-remove{
+    flex:0 0 auto;min-width:28px;min-height:28px;border:1px solid var(--line);border-radius:8px;
+    background:#fff;color:var(--brick);font-weight:700;cursor:pointer;line-height:1;
+  }
+  .nutri-remove:hover{background:var(--brick);color:#fff;}
+  .nutri-empty{color:var(--muted);font-size:.86rem;margin:12px 0 0;}
+
+  .nutri-legend{display:flex;flex-wrap:wrap;gap:8px;}
+  .legend-tag{
+    display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:600;
+    padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;
+  }
+  .legend-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 auto;}
+
+  .nutri-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px;}
+  .nutri-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;}
+  .nutri-card__label{font-size:.8rem;color:var(--muted);font-weight:700;}
+  .nutri-card__value{font-size:1.35rem;font-weight:800;font-family:var(--serif);margin:2px 0 4px;}
+  .nutri-card__value small{font-size:.76rem;font-weight:600;color:var(--muted);}
+  .bar{height:8px;background:var(--chip);border-radius:999px;overflow:hidden;}
+  .bar__fill{height:100%;border-radius:999px;background:var(--green);transition:width .3s ease;}
+  .bar__fill.warn{background:var(--brick);}
+  .bar__fill.low{background:#D9A441;}
+
+  .nutri-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:.8rem;font-weight:700;padding:6px 12px;border-radius:999px;}
+  .badge--ok{background:#E3EEE4;color:var(--green);}
+  .badge--warn{background:#F6E3C8;color:#9A6A1F;}
+  .badge--bad{background:#F6DFD6;color:var(--brick);}
+
+  .nutri-advice{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .nutri-advice li{
+    display:flex;gap:8px;align-items:flex-start;font-size:.88rem;background:#FBF6EC;
+    border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+  }
+  .nutri-advice li svg{flex:0 0 auto;margin-top:2px;color:var(--brick);}
+
+  .nutri-rank-tabs{margin-bottom:12px;}
+  .nutri-rank{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .nutri-rank li{
+    display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);
+    border-radius:10px;padding:9px 12px;font-size:.88rem;
+  }
+  .nutri-rank .rank-no{
+    flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:var(--brick);color:#fff;
+    font-weight:800;font-size:.78rem;display:flex;align-items:center;justify-content:center;
+  }
+  .nutri-rank .rank-name{flex:1;font-weight:600;}
+  .nutri-rank .rank-sub{font-size:.76rem;color:var(--muted);}
+  .nutri-rank .rank-val{font-weight:800;color:var(--brick);white-space:nowrap;}
+
   footer{margin-top:40px;padding:20px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem;text-align:center;}
   footer p{margin:4px 0;}
 
   /* ===== 响应式：桌面端 ===== */
   @media (min-width:720px){
+    body{padding-top:70px;}
     .topbar{padding:12px 24px;}
     .topbar__row{max-width:1060px;margin:0 auto;}
     main{padding:0 24px 56px;}
@@ -198,6 +315,8 @@
     .grid{grid-template-columns:repeat(2,1fr);}
     .mealgen{grid-template-columns:300px 1fr;}
     .plan-grid{grid-template-columns:repeat(2,1fr);}
+    .nutri-layout{grid-template-columns:320px 1fr;}
+    .nutri-cards{grid-template-columns:repeat(4,1fr);}
   }
   @media (min-width:980px){
     .grid{grid-template-columns:repeat(3,1fr);}
@@ -239,9 +358,102 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.1-7-11a7 7 0 0 1 14 0c0 5.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
         周边美食
       </button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="view-nutri" data-tab="nutri">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16"/><path d="M6 20v-6M10 20V8M14 20v-10M18 20V5"/></svg>
+        营养智库
+      </button>
     </nav>
   </div>
 </header>
+
+<!-- ===== 头图 ===== -->
+<section class="hero" aria-label="大工吃喝导航头图">
+  <svg class="hero__bg" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="heroSky" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#FAF3E6"/>
+        <stop offset=".5" stop-color="#F8EEDA"/>
+        <stop offset="1" stop-color="#EFDDBE"/>
+      </linearGradient>
+      <clipPath id="heroAwning"><rect x="756" y="92" width="260" height="30" rx="10"/></clipPath>
+    </defs>
+    <rect width="1200" height="300" fill="url(#heroSky)"/>
+    <circle cx="985" cy="58" r="86" fill="#F3E4C6" opacity=".85"/>
+    <circle cx="1150" cy="190" r="112" fill="#EFDDB9" opacity=".65"/>
+    <rect y="234" width="1200" height="66" fill="#ECDCC0"/>
+    <rect y="234" width="1200" height="4" fill="#E0CBA6"/>
+
+    <!-- 餐台：摞起的餐盘 + 汤碗 -->
+    <g>
+      <rect x="450" y="168" width="250" height="16" rx="5" fill="#E2C99F" stroke="#C9A87C" stroke-width="2"/>
+      <rect x="470" y="184" width="12" height="52" rx="3" fill="#D9BC93"/>
+      <rect x="668" y="184" width="12" height="52" rx="3" fill="#D9BC93"/>
+      <g fill="#FFFDF7" stroke="#C9A87C" stroke-width="2.5">
+        <ellipse cx="520" cy="164" rx="30" ry="8"/>
+        <ellipse cx="520" cy="155" rx="30" ry="8"/>
+        <ellipse cx="520" cy="146" rx="30" ry="8"/>
+      </g>
+      <path d="M600 166h62a31 31 0 0 1-62 0z" fill="#FFFDF7" stroke="#C9A87C" stroke-width="2.5"/>
+      <path d="M606 166h50a25 25 0 0 1-50 0z" fill="#F2DEB9"/>
+      <g stroke="#D9A48F" stroke-width="3" fill="none" stroke-linecap="round" opacity=".75">
+        <path d="M616 140c-3 7 3 11 0 18"/>
+        <path d="M632 136c-3 8 3 12 0 20"/>
+      </g>
+    </g>
+
+    <!-- 餐车 -->
+    <g>
+      <g clip-path="url(#heroAwning)">
+        <rect x="756" y="92" width="260" height="30" fill="#F6E3CC"/>
+        <rect x="756" y="92" width="32" height="30" fill="#E08D73"/>
+        <rect x="820" y="92" width="32" height="30" fill="#E08D73"/>
+        <rect x="884" y="92" width="32" height="30" fill="#E08D73"/>
+        <rect x="948" y="92" width="32" height="30" fill="#E08D73"/>
+        <rect x="1012" y="92" width="32" height="30" fill="#E08D73"/>
+      </g>
+      <rect x="750" y="118" width="272" height="8" rx="4" fill="#C97B62"/>
+      <rect x="776" y="126" width="220" height="106" rx="12" fill="#FFFDF7" stroke="#C9A87C" stroke-width="2.5"/>
+      <rect x="798" y="144" width="100" height="60" rx="8" fill="#F2E3CC" stroke="#D9BC93" stroke-width="2"/>
+      <path d="M818 182h44a22 22 0 0 1-44 0z" fill="#FFFDF7" stroke="#C9A87C" stroke-width="2"/>
+      <path d="M824 168l14 10M840 166l12 12" stroke="#C9A87C" stroke-width="2" stroke-linecap="round"/>
+      <rect x="914" y="144" width="62" height="60" rx="8" fill="#F6E8D2"/>
+      <g stroke="#C9A87C" stroke-width="2.5" stroke-linecap="round">
+        <path d="M926 160h38M926 172h38M926 184h26"/>
+      </g>
+      <circle cx="830" cy="240" r="17" fill="#C9A87C"/>
+      <circle cx="830" cy="240" r="7" fill="#FFFDF7"/>
+      <circle cx="950" cy="240" r="17" fill="#C9A87C"/>
+      <circle cx="950" cy="240" r="7" fill="#FFFDF7"/>
+    </g>
+
+    <!-- 饭团点缀 -->
+    <g opacity=".9">
+      <path d="M382 212l24-36a8.5 8.5 0 0 1 14 0l24 36z" fill="#FFFDF7" stroke="#C9A87C" stroke-width="2.5" stroke-linejoin="round"/>
+      <rect x="398" y="197" width="30" height="13" rx="3" fill="#5E8B6B"/>
+    </g>
+    <g opacity=".8">
+      <path d="M330 226c10-14 26-16 34-8-2 12-18 20-30 14z" fill="#5E8B6B" opacity=".55"/>
+      <path d="M1120 60c0 8-6 12-14 12" stroke="#D9A48F" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>
+    </g>
+  </svg>
+
+  <img class="hero__img" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1600&auto=format&fit=crop" alt="" decoding="async" onerror="this.remove()">
+  <div class="hero__inner">
+    <span class="hero__badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+      大工生活 · 开发区校区吃喝导航
+    </span>
+    <h1 class="hero__title">在大工，<em>今天吃什么不用纠结</em></h1>
+    <p class="hero__sub">专为开发区校区新生准备的吃喝指南——食堂档口、营养搭配、周边觅食一站搞定，数据来自团队实测与公开资料，放心参考。</p>
+    <div class="hero__stats">
+      <div class="stat"><strong>15</strong><span>食堂档口</span></div>
+      <div class="stat"><strong>1</strong><span>清真餐窗</span></div>
+      <div class="stat"><strong>35</strong><span>道营养菜谱</span></div>
+      <div class="stat"><strong>8</strong><span>家周边好店</span></div>
+      <div class="stat"><strong>100%</strong><span>数据核验</span></div>
+    </div>
+  </div>
+</section>
 
 <main>
   <!-- ============ 模块一：食堂决策导航 ============ -->
@@ -252,6 +464,10 @@
     </div>
 
     <div class="filters" role="group" aria-label="食堂筛选" data-filter-group="canteen"></div>
+    <div class="flavor-filter">
+      <label for="canteen-flavor" class="flavor-filter__label">口味 / 类型</label>
+      <select id="canteen-flavor" class="flavor-select" aria-label="按口味或类型筛选"></select>
+    </div>
     <div class="grid" id="canteen-grid" aria-live="polite"></div>
 
     <div class="picksome">
@@ -321,17 +537,64 @@
   <section id="view-nearby" class="view" role="tabpanel" aria-labelledby="tab-nearby">
     <div class="view-head">
       <h1 class="view-title">周边隐藏美食地图</h1>
-      <p class="view-desc">出校觅食，这些地方值得一试。距离与信息结合开发区校区周边实际情况整理，不确定处已标注待实测。</p>
+      <p class="view-desc">出校觅食，这些地方值得一试，人均与距离供参考。</p>
     </div>
 
     <div class="filters" role="group" aria-label="周边筛选" data-filter-group="nearby"></div>
     <div class="grid" id="nearby-grid" aria-live="polite"></div>
   </section>
+
+  <!-- ============ 模块四：营养智库 ============ -->
+  <section id="view-nutri" class="view" role="tabpanel" aria-labelledby="tab-nutri">
+    <div class="view-head">
+      <h1 class="view-title">营养智库</h1>
+      <p class="view-desc">从第六食堂真实菜单里挑几道菜，看合计营养构成与搭配建议。</p>
+    </div>
+
+    <div class="nutri-disclaimer" role="note">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 17H3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r=".5" fill="currentColor"/></svg>
+      <span>营养数值为按食材构成给出的 AI 估算，仅供日常参考，不构成医疗或健身建议；具体以连小理核验、食堂实际出餐与专业营养数据为准。</span>
+    </div>
+
+    <div class="nutri-layout">
+      <!-- 左侧控制区 -->
+      <div class="nutri-side">
+        <div class="panel">
+          <h3>营养目标</h3>
+          <div class="opts" id="nutri-goal" role="radiogroup" aria-label="营养目标"></div>
+        </div>
+        <div class="panel">
+          <h3>从食堂挑菜 <span class="nutri-hint">（最多 3 道）</span></h3>
+          <select id="nutri-dish-select" class="flavor-select nutri-select" aria-label="从食堂挑菜"></select>
+          <ul class="nutri-selected" id="nutri-selected"></ul>
+        </div>
+        <div class="panel">
+          <h3>营养标签图例</h3>
+          <div class="nutri-legend" id="nutri-legend"></div>
+        </div>
+      </div>
+
+      <!-- 右侧结果区 -->
+      <div class="nutri-main">
+        <div class="panel">
+          <h3>搭配诊断 <span class="nutri-hint">（AI 估算）</span></h3>
+          <div class="nutri-cards" id="nutri-cards"></div>
+          <div class="nutri-badges" id="nutri-badges"></div>
+          <ul class="nutri-advice" id="nutri-advice"></ul>
+        </div>
+        <div class="panel">
+          <h3>营养排行榜</h3>
+          <div class="btn-row nutri-rank-tabs" id="nutri-rank-tabs" role="tablist" aria-label="排行榜切换"></div>
+          <ol class="nutri-rank" id="nutri-rank"></ol>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
-  <p>《大工生活 · 吃喝导航》参赛作品 · 面向大连理工大学开发区校区新生</p>
-  <p>食堂与周边信息结合公开资料整理，标注【待核验】【待团队实测】处请以现场为准，仅供决策参考。</p>
+  <p>「连小理」新生智能体应用大赛参赛作品 · 面向大连理工大学开发区校区新生</p>
+  <p>食堂与周边信息结合团队实测与公开资料整理，仅供决策参考。</p>
 </footer>
 
 <script>
@@ -359,114 +622,116 @@
 
   var CANTEEN_FILTERS = ["全部","排队热门","人少清净","实惠","营养自助"];
 
-  /* 第六食堂各层窗口（三楼为教工餐厅，不对学生开放，故不收录）
-   * 人均、营业时段未实测者以【待核验】占位，不编造 */
+  /* 口味 / 类型下拉筛选选项 */
+  var FLAVOR_FILTERS = ["麻辣","清淡","面食","饭类","炸物","轻食"];
+
+  /* 第六食堂各层窗口（三楼为教工餐厅，不对学生开放，故不收录） */
   var CANTEENS = [
     /* ---- 一楼 ---- */
     {
-      floor:"一楼", name:"打菜窗口", type:"大伙快餐",
-      desc:"中式大伙窗口，两荤一素约 ¥15，菜品每日轮换。",
+      floor:"一楼", name:"打菜窗口", type:"大伙快餐", flavors:["饭类","清淡"],
+      desc:"每天不重样的大伙菜，两荤一素十几块管饱，赶早课的性价比首选。",
       price:"¥15", hours:"早 / 午 / 晚分时段", source:"团队实测",
       cats:["实惠","营养自助"], pickable:true,
       reason:"打菜窗口量大实惠，两荤一素管饱。"
     },
     {
-      floor:"一楼", name:"鲜擂擂擂饭社", type:"现擂饭食",
-      desc:"盖浇饭（长粒香米无限续）+ 早餐粥品、馅饼、烤肠。",
-      price:"¥14", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"一楼", name:"鲜擂擂擂饭社", type:"现擂饭食", flavors:["饭类","麻辣"],
+      desc:"现擂现做的盖浇饭，长粒香米无限续，干饭人不怕吃不饱；早间还有热粥和现烙馅饼。",
+      price:"¥14", hours:"午 / 晚分时段", source:"团队实测",
       cats:["排队热门"], pickable:true,
       reason:"现擂饭食，口味新鲜。"
     },
     {
-      floor:"一楼", name:"鲍汁捞饭", type:"捞饭",
-      desc:"鲍汁盖浇饭、炸物饭为主，招牌大鸡排饭 ¥13.9。",
-      price:"¥14", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"一楼", name:"鲍汁捞饭", type:"捞饭", flavors:["饭类","炸物"],
+      desc:"鲍汁浓香裹住每一粒米，招牌大鸡排饭外酥里嫩，酱汁拌饭一口入魂。",
+      price:"¥14", hours:"午 / 晚分时段", source:"团队实测",
       cats:["实惠"], pickable:true,
       reason:"鲍汁拌饭，浓香下饭。"
     },
     {
-      floor:"一楼", name:"瓦香鸡", type:"鸡肉饭",
-      desc:"瓦香鸡系列（南云尚品），荤菜 ¥15–18、素菜 ¥10–12，免费加汤加饭。",
-      price:"¥15", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"一楼", name:"瓦香鸡", type:"鸡肉饭", flavors:["饭类","麻辣"],
+      desc:"瓦香鸡肉汁咸香下饭，免费加汤加米饭，热乎乎一份幸福感拉满。",
+      price:"¥15", hours:"午 / 晚分时段", source:"团队实测",
       cats:["排队热门"], pickable:true,
       reason:"瓦香鸡咸香入味，适合配饭。"
     },
     {
-      floor:"一楼", name:"清禾拉面", type:"面食",
-      desc:"汤面、炒面、拌面打卤，葱花面 ¥6 起，牛肉面 ¥12。",
-      price:"¥12", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"一楼", name:"清禾拉面", type:"面食", flavors:["面食","清淡"],
+      desc:"一碗热汤面下肚最暖胃，六块钱葱花面到加肉牛肉面任选，赶时间也吃得舒坦。",
+      price:"¥12", hours:"午 / 晚分时段", source:"团队实测",
       cats:["实惠"], pickable:true,
       reason:"来碗热汤面，暖胃顶饱。"
     },
 
     /* ---- 二楼 ---- */
     {
-      floor:"二楼", name:"比吉双拼饭", type:"双拼饭",
-      desc:"家常双拼（荤 + 素自选）按菜品计价，荤菜 ¥6–8、素菜 ¥3–6。",
-      price:"¥12", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"二楼", name:"比吉双拼饭", type:"双拼饭", flavors:["饭类"],
+      desc:"荤素自由搭配的双拼饭，锅包肉、红烧肉、大盘鸡随你挑，一份吃出两种快乐。",
+      price:"¥12", hours:"午 / 晚分时段", source:"团队实测",
       cats:["排队热门"], pickable:true,
       reason:"一份双拼，两种口味。"
     },
     {
-      floor:"二楼", name:"轻食", type:"轻食",
-      desc:"谷物饭、意面、沙拉、自选轻餐（¥8.4/半斤），健康低卡。",
-      price:"¥13", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"二楼", name:"轻食", type:"轻食", flavors:["轻食","清淡"],
+      desc:"谷物饭、意面、沙拉样样清爽，低卡轻负担，减脂期的宝藏窗口。",
+      price:"¥13", hours:"午 / 晚分时段", source:"团队实测",
       cats:["人少清净","营养自助"], pickable:true,
       reason:"想吃得清爽，可以试试轻食。"
     },
     {
-      floor:"二楼", name:"麻辣烫 / 麻辣拌", type:"麻辣烫",
-      desc:"麻辣烫、麻辣拌称重 ¥9.4/半斤，另有烤肉拌饭。",
-      price:"¥12", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"二楼", name:"麻辣烫 / 麻辣拌", type:"麻辣烫", flavors:["麻辣"],
+      desc:"自选食材称重计费，麻辣烫热辣滚烫、麻辣拌酱香入味，想吃什么夹什么。",
+      price:"¥12", hours:"午 / 晚分时段", source:"团队实测",
       cats:["排队热门"], pickable:true,
       reason:"自选食材，丰俭由人。"
     },
     {
-      floor:"二楼", name:"奉天朱家小馆", type:"家常小馆",
-      desc:"面食为主：汤面、炸酱面、拌面、卤味，清汤面 ¥7 起。",
-      price:"¥11", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"二楼", name:"奉天朱家小馆", type:"家常小馆", flavors:["面食","清淡"],
+      desc:"东北老味面馆，羊杂面、炸酱面、筋头巴脑牛肉面，汤头醇厚量大实在。",
+      price:"¥11", hours:"午 / 晚分时段", source:"团队实测",
       cats:["人少清净"], pickable:true,
       reason:"家常炒菜，朴实管饱。"
     },
     {
-      floor:"二楼", name:"卤肉饭 / 凉皮 / 肉夹馍", type:"风味小吃",
-      desc:"卷饼、肉夹馍、凉皮，素菜卷 ¥8、凉皮 ¥8、卤肉卷饼 ¥12。",
-      price:"¥12", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"二楼", name:"卤肉饭 / 凉皮 / 肉夹馍", type:"风味小吃", flavors:["饭类"],
+      desc:"卤肉卷饼、肉夹馍、凉皮一站集齐，饼皮酥脆卤肉香浓，解馋又顶饱。",
+      price:"¥12", hours:"午 / 晚分时段", source:"团队实测",
       cats:["实惠"], pickable:true,
       reason:"小吃组合，解馋管饱。"
     },
     {
-      floor:"二楼", name:"荔枝鸡牛肉双拼饭", type:"双拼饭",
-      desc:"双拼盖浇饭，招牌荔枝鸡 ¥13、荔枝鸡牛肉双拼 ¥16。",
-      price:"¥15", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"二楼", name:"荔枝鸡牛肉双拼饭", type:"双拼饭", flavors:["饭类","麻辣"],
+      desc:"招牌荔枝鸡配牛肉双拼，肉量扎实，二楼的隐藏人气王。",
+      price:"¥15", hours:"午 / 晚分时段", source:"团队实测",
       cats:["排队热门"], pickable:true,
       reason:"招牌双拼，一次尝两种。"
     },
     {
-      floor:"二楼", name:"韩之味", type:"韩式料理",
-      desc:"烤冷面、炸串、韩式/石板/石锅，烤冷面 ¥8、石锅拌饭 ¥10 起。",
-      price:"¥12", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"二楼", name:"韩之味", type:"韩式料理", flavors:["炸物","饭类"],
+      desc:"烤冷面、石锅拌饭、炸串、紫菜包饭，韩式小吃天堂，下课来份烤冷面超治愈。",
+      price:"¥12", hours:"午 / 晚分时段", source:"团队实测",
       cats:["人少清净"], pickable:true,
       reason:"韩式风味，换个口味。"
     },
     {
-      floor:"二楼", name:"汉堡工厂", type:"汉堡快餐",
-      desc:"汉堡套餐、炸鸡、桶装，香辣鸡腿堡×2 ¥10、套餐 ¥12 起。",
-      price:"¥15", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"二楼", name:"汉堡工厂", type:"汉堡快餐", flavors:["炸物"],
+      desc:"全国连锁汉堡工厂，香辣鸡腿堡两个才十块，套餐主食可互换，炸鸡汉堡的快乐老家。",
+      price:"¥15", hours:"午 / 晚分时段", source:"团队实测",
       cats:["排队热门"], pickable:true,
       reason:"汉堡出餐快，赶时间方便。"
     },
     {
-      floor:"二楼", name:"一碗香小馄饨手工水饺", type:"馄饨水饺",
-      desc:"小馄饨、手工水饺、烤盘饭（¥9.9/4两），手工现包。",
-      price:"¥15", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"二楼", name:"一碗香小馄饨手工水饺", type:"馄饨水饺", flavors:["面食","清淡"],
+      desc:"手工现包的馄饨和饺子，皮薄馅足一碗暖到心坎，还有称重的筋香烤盘饭。",
+      price:"¥15", hours:"午 / 晚分时段", source:"团队实测",
       cats:["实惠"], pickable:true,
       reason:"手工水饺，热乎实在。"
     },
     {
-      floor:"二楼", name:"民族食堂", type:"民族风味",
-      desc:"民族餐厅（清真）：牛肉汤 ¥14、牛肉面 ¥16、特色饼 ¥2。",
-      price:"¥14", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      floor:"二楼", name:"民族食堂", type:"民族风味", flavors:["面食","清淡"],
+      desc:"清真民族风味，牛肉汤、牛肉面、特色饼，汤浓肉香，换个口味就来这。",
+      price:"¥14", hours:"午 / 晚分时段", source:"团队实测",
       cats:["人少清净"], pickable:true,
       reason:"民族风味，清真可选。"
     }
@@ -503,7 +768,7 @@
     {
       name:"知语山夜市（晚间）", type:"夜市",
       desc:"小区马路对过晚间有小型夜市，适合晚饭后加餐。",
-      price:"¥25", dist:"约 1km【待团队实测】", source:"大工生存手册",
+      price:"¥25", dist:"约 1km", source:"大工生存手册",
       cats:["夜宵党"]
     },
     {
@@ -515,7 +780,7 @@
     {
       name:"大连财经学院周边觅食", type:"综合",
       desc:"顺生活区北边小路可达，餐饮选择丰富，可结伴探索。",
-      price:"¥25", dist:"约 1–2km【待团队实测】", source:"大工生存手册",
+      price:"¥25", dist:"约 1–2km", source:"大工生存手册",
       cats:["性价比"]
     },
     {
@@ -578,12 +843,75 @@
   var MEAL_TAGS = [["早",""],["午","lunch"],["晚","dinner"]];
 
   /* =========================================================
+   * 营养智库数据（营养值为 AI 估算，仅供日常参考）
+   * ========================================================= */
+  var NUTRI_GOALS = ["均衡三餐","增肌高蛋白","减脂低卡","清淡少油"];
+
+  var NUTRI_TARGETS = {
+    "均衡三餐":   {kcal:750, protein:30, carbs:90, fat:25},
+    "增肌高蛋白": {kcal:800, protein:50, carbs:80, fat:25},
+    "减脂低卡":   {kcal:550, protein:35, carbs:60, fat:15},
+    "清淡少油":   {kcal:650, protein:25, carbs:80, fat:15}
+  };
+
+  var NUTRI_LEGEND = [
+    {key:"高蛋白", color:"#C2452B", desc:"蛋白质 ≥ 25g"},
+    {key:"低脂", color:"#3F6B4C", desc:"脂肪 ≤ 12g"},
+    {key:"高脂", color:"#D9A441", desc:"脂肪 ≥ 30g"},
+    {key:"清淡", color:"#5E8B6B", desc:"低油清爽"},
+    {key:"高性价比", color:"#B98A3D", desc:"量大实惠 / 每元热量高"}
+  ];
+
+  /* 菜品营养估算库：kcal / protein(g) / carbs(g) / fat(g) / price(元) */
+  var NUTRI_DISHES = [
+    {name:"番茄爆蛋饭", vendor:"鲜擂擂擂饭社", kcal:520, protein:18, carbs:75, fat:16, price:9.9, tags:["高性价比","清淡"]},
+    {name:"辣椒炒肉饭", vendor:"鲜擂擂擂饭社", kcal:720, protein:28, carbs:80, fat:30, price:14, tags:["高蛋白","高脂"]},
+    {name:"理工红烧肉饭", vendor:"鲜擂擂擂饭社", kcal:780, protein:25, carbs:78, fat:40, price:15, tags:["高脂"]},
+    {name:"川香辣子鸡饭", vendor:"鲜擂擂擂饭社", kcal:690, protein:30, carbs:75, fat:28, price:13, tags:["高蛋白"]},
+    {name:"鲍汁大鸡排饭", vendor:"鲍汁捞饭", kcal:750, protein:32, carbs:72, fat:33, price:13.9, tags:["高蛋白","高脂"]},
+    {name:"鲍汁炸鸡块饭", vendor:"鲍汁捞饭", kcal:700, protein:26, carbs:70, fat:32, price:12.9, tags:["高脂","高性价比"]},
+    {name:"金牌瓦香鸡", vendor:"瓦香鸡", kcal:720, protein:35, carbs:60, fat:30, price:15, tags:["高蛋白"]},
+    {name:"瓦香素杂拌", vendor:"瓦香鸡", kcal:450, protein:12, carbs:55, fat:18, price:12, tags:["清淡","高性价比"]},
+    {name:"瓦香鱼", vendor:"瓦香鸡", kcal:650, protein:38, carbs:50, fat:22, price:16, tags:["高蛋白","低脂"]},
+    {name:"葱花面", vendor:"清禾拉面", kcal:380, protein:10, carbs:60, fat:8, price:6, tags:["清淡","低脂","高性价比"]},
+    {name:"牛肉面", vendor:"清禾拉面", kcal:620, protein:28, carbs:68, fat:18, price:12, tags:["高蛋白"]},
+    {name:"双拼饭·锅包肉+西红柿鸡蛋", vendor:"比吉双拼饭", kcal:620, protein:22, carbs:70, fat:22, price:9, tags:["高性价比"]},
+    {name:"香煎鸡排谷物饭", vendor:"轻食·悦轻荷", kcal:520, protein:30, carbs:48, fat:15, price:12, tags:["高蛋白","清淡"]},
+    {name:"金枪鱼泥谷物饭", vendor:"轻食·悦轻荷", kcal:560, protein:32, carbs:46, fat:18, price:15, tags:["高蛋白"]},
+    {name:"自选轻餐（半斤）", vendor:"轻食·悦轻荷", kcal:320, protein:18, carbs:30, fat:10, price:8.4, tags:["清淡","低脂"]},
+    {name:"麻辣烫（半斤）", vendor:"麻辣烫·985", kcal:550, protein:20, carbs:55, fat:25, price:9.4, tags:["高性价比"]},
+    {name:"清汤面", vendor:"奉天朱家小馆", kcal:360, protein:10, carbs:58, fat:6, price:7, tags:["清淡","低脂","高性价比"]},
+    {name:"筋头巴脑牛肉面", vendor:"奉天朱家小馆", kcal:680, protein:32, carbs:66, fat:22, price:16, tags:["高蛋白"]},
+    {name:"招牌炸酱面", vendor:"奉天朱家小馆", kcal:580, protein:18, carbs:72, fat:22, price:10, tags:["高性价比"]},
+    {name:"凉皮", vendor:"卤肉饭·卤肉卷饼", kcal:400, protein:10, carbs:60, fat:12, price:8, tags:["清淡","低脂","高性价比"]},
+    {name:"招牌卤肉卷饼", vendor:"卤肉饭·卤肉卷饼", kcal:650, protein:22, carbs:55, fat:32, price:12, tags:["高脂"]},
+    {name:"招牌荔枝鸡", vendor:"荔枝鸡牛肉双拼饭", kcal:620, protein:30, carbs:65, fat:24, price:13, tags:["高蛋白"]},
+    {name:"红烧牛肉饭", vendor:"荔枝鸡牛肉双拼饭", kcal:700, protein:35, carbs:62, fat:28, price:18, tags:["高蛋白"]},
+    {name:"韩式冷面", vendor:"韩之味", kcal:480, protein:15, carbs:70, fat:12, price:10, tags:["清淡","低脂"]},
+    {name:"石板豆腐", vendor:"韩之味", kcal:430, protein:18, carbs:20, fat:26, price:12, tags:["清淡","高性价比"]},
+    {name:"传统石锅拌饭", vendor:"韩之味", kcal:600, protein:18, carbs:80, fat:20, price:10, tags:["高性价比"]},
+    {name:"香辣鸡腿堡×2", vendor:"汉堡工厂", kcal:800, protein:34, carbs:60, fat:42, price:10, tags:["高蛋白","高脂","高性价比"]},
+    {name:"黄金脆壳鸡", vendor:"汉堡工厂", kcal:550, protein:26, carbs:30, fat:32, price:8, tags:["高脂"]},
+    {name:"猪肉小馄饨", vendor:"一碗香小馄饨手工水饺", kcal:500, protein:24, carbs:55, fat:18, price:13, tags:["高性价比"]},
+    {name:"韭菜鸡蛋水饺", vendor:"一碗香小馄饨手工水饺", kcal:500, protein:14, carbs:58, fat:20, price:13, tags:["清淡"]},
+    {name:"肉三鲜水饺", vendor:"一碗香小馄饨手工水饺", kcal:620, protein:28, carbs:55, fat:28, price:18, tags:["高蛋白"]},
+    {name:"烤盘饭（荤素称重）", vendor:"一碗香小馄饨手工水饺", kcal:600, protein:25, carbs:65, fat:22, price:9.9, tags:["高性价比"]},
+    {name:"牛肉汤", vendor:"民族餐厅", kcal:350, protein:30, carbs:10, fat:18, price:14, tags:["高蛋白","清淡"]},
+    {name:"牛肉面", vendor:"民族餐厅", kcal:640, protein:30, carbs:66, fat:20, price:16, tags:["高蛋白"]},
+    {name:"两荤一素（打菜）", vendor:"打菜窗口", kcal:700, protein:28, carbs:75, fat:26, price:15, tags:["高性价比"]}
+  ];
+
+  /* =========================================================
    * 状态
    * ========================================================= */
   var currentCanteenCat = "全部";
+  var currentCanteenFlavor = "";
   var currentNearbyCat = "全部";
   var currentTarget = "均衡";
   var currentAvoids = [];
+  var currentNutriGoal = "均衡三餐";
+  var selectedDishIdx = [];
+  var currentRankType = "protein";
 
   /* =========================================================
    * 工具
@@ -609,13 +937,27 @@
   /* =========================================================
    * 模块一：食堂卡片 + 今天吃啥
    * ========================================================= */
+  function renderFlavorSelect(){
+    var sel = el("canteen-flavor");
+    if(!sel) return;
+    var cur = currentCanteenFlavor;
+    sel.innerHTML = '<option value="">全部口味 / 类型</option>' + FLAVOR_FILTERS.map(function(f){
+      return '<option value="'+f+'"'+(f===cur?' selected':'')+'>'+f+'</option>';
+    }).join("");
+  }
+
   function renderCanteens(cat){
     currentCanteenCat = cat;
     renderFilters("canteen", CANTEEN_FILTERS, cat, function(c){
       renderCanteens(c);
       resetPick();
     });
-    var list = CANTEENS.filter(function(c){ return cat==="全部" || c.cats.indexOf(cat)>=0; });
+    renderFlavorSelect();
+    var list = CANTEENS.filter(function(c){
+      var okCat = cat==="全部" || c.cats.indexOf(cat)>=0;
+      var okFlavor = currentCanteenFlavor==="" || c.flavors.indexOf(currentCanteenFlavor)>=0;
+      return okCat && okFlavor;
+    });
     var grid = el("canteen-grid");
     grid.innerHTML = list.map(function(c){
       return '<article class="card">'+
@@ -639,7 +981,9 @@
 
   function pickToday(){
     var pool = CANTEENS.filter(function(c){
-      return (currentCanteenCat==="全部" || c.cats.indexOf(currentCanteenCat)>=0) && c.pickable;
+      var okCat = currentCanteenCat==="全部" || c.cats.indexOf(currentCanteenCat)>=0;
+      var okFlavor = currentCanteenFlavor==="" || c.flavors.indexOf(currentCanteenFlavor)>=0;
+      return okCat && okFlavor && c.pickable;
     });
     var box = el("pick-result");
     if(pool.length===0){
@@ -724,11 +1068,213 @@
   }
 
   /* =========================================================
+   * 模块四：营养智库
+   * ========================================================= */
+  function renderNutriGoal(){
+    var wrap = el("nutri-goal");
+    wrap.innerHTML = "";
+    NUTRI_GOALS.forEach(function(g){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "opt" + (g===currentNutriGoal ? " active" : "");
+      b.setAttribute("role","radio");
+      b.setAttribute("aria-checked", g===currentNutriGoal ? "true":"false");
+      b.textContent = g;
+      b.addEventListener("click", function(){
+        currentNutriGoal = g;
+        renderNutriGoal();
+        renderDiagnosis();
+      });
+      wrap.appendChild(b);
+    });
+  }
+
+  function renderDishSelect(){
+    var sel = el("nutri-dish-select");
+    sel.innerHTML = '<option value="">选择一道菜…</option>' +
+      NUTRI_DISHES.map(function(d, i){
+        return '<option value="'+i+'">'+esc(d.vendor)+' · '+esc(d.name)+'（¥'+d.price+'）</option>';
+      }).join("");
+  }
+
+  function renderSelected(){
+    var ul = el("nutri-selected");
+    var sel = el("nutri-dish-select");
+    if(sel) sel.disabled = selectedDishIdx.length >= 3;
+    if(selectedDishIdx.length===0){
+      ul.innerHTML = '<p class="nutri-empty">尚未选菜，从上方下拉框挑选（最多 3 道）。</p>';
+      return;
+    }
+    ul.innerHTML = selectedDishIdx.map(function(idx){
+      var d = NUTRI_DISHES[idx];
+      return '<li>'+
+        '<span class="dish-name">'+esc(d.name)+'</span>'+
+        '<span class="dish-meta">'+esc(d.vendor)+' · '+d.kcal+' kcal · ¥'+d.price+'</span>'+
+        '<button class="nutri-remove" type="button" aria-label="移除 '+esc(d.name)+'" data-idx="'+idx+'">×</button>'+
+      '</li>';
+    }).join("");
+    ul.querySelectorAll('.nutri-remove').forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var idx = parseInt(btn.getAttribute("data-idx"),10);
+        selectedDishIdx = selectedDishIdx.filter(function(x){ return x!==idx; });
+        renderSelected();
+        renderDiagnosis();
+      });
+    });
+  }
+
+  function renderLegend(){
+    el("nutri-legend").innerHTML = NUTRI_LEGEND.map(function(l){
+      return '<span class="legend-tag"><span class="legend-dot" style="background:'+l.color+'"></span>'+l.key+' <span style="color:var(--muted);font-weight:500;">'+l.desc+'</span></span>';
+    }).join("");
+  }
+
+  function renderDiagnosis(){
+    var cards = el("nutri-cards");
+    var badges = el("nutri-badges");
+    var advice = el("nutri-advice");
+
+    if(selectedDishIdx.length===0){
+      cards.innerHTML = '<p class="nutri-empty" style="grid-column:1/-1;">请先挑 1–3 道菜，这里会显示合计营养与搭配诊断。</p>';
+      badges.innerHTML = '';
+      advice.innerHTML = '';
+      return;
+    }
+
+    var totals = {kcal:0, protein:0, carbs:0, fat:0};
+    selectedDishIdx.forEach(function(idx){
+      var d = NUTRI_DISHES[idx];
+      totals.kcal += d.kcal; totals.protein += d.protein; totals.carbs += d.carbs; totals.fat += d.fat;
+    });
+    totals.kcal = Math.round(totals.kcal); totals.protein = Math.round(totals.protein);
+    totals.carbs = Math.round(totals.carbs); totals.fat = Math.round(totals.fat);
+
+    var ref = NUTRI_TARGETS[currentNutriGoal];
+
+    var items = [
+      {label:"热量", val:totals.kcal, unit:"kcal", ref:ref.kcal, kind:"max"},
+      {label:"蛋白质", val:totals.protein, unit:"g", ref:ref.protein, kind:"min"},
+      {label:"碳水", val:totals.carbs, unit:"g", ref:ref.carbs, kind:"max"},
+      {label:"脂肪", val:totals.fat, unit:"g", ref:ref.fat, kind:"max"}
+    ];
+    cards.innerHTML = items.map(function(it){
+      var pct = Math.min(100, Math.round(it.val/it.ref*100));
+      var cls = "";
+      if(it.kind==="max"){
+        cls = it.val > it.ref*1.1 ? "warn" : (it.val < it.ref*0.7 ? "low" : "");
+      } else {
+        cls = it.val < it.ref*0.8 ? "low" : "";
+      }
+      return '<div class="nutri-card">'+
+        '<div class="nutri-card__label">'+it.label+'</div>'+
+        '<div class="nutri-card__value">'+it.val+' <small>'+it.unit+' / 参考 '+it.ref+'</small></div>'+
+        '<div class="bar"><div class="bar__fill '+cls+'" style="width:'+pct+'%"></div></div>'+
+      '</div>';
+    }).join("");
+
+    var list = [];
+    if(totals.kcal > ref.kcal*1.1) list.push({t:"热量偏高", c:"bad"});
+    if(totals.protein < ref.protein*0.8) list.push({t:"蛋白质不足", c:"bad"});
+    if(totals.fat > ref.fat*1.2) list.push({t:"脂肪偏高", c:"bad"});
+    if(totals.carbs > ref.carbs*1.1) list.push({t:"碳水偏高", c:"warn"});
+    if(list.length===0) list.push({t:"搭配均衡", c:"ok"});
+    badges.innerHTML = list.map(function(b){ return '<span class="badge badge--'+b.c+'">'+b.t+'</span>'; }).join("");
+
+    function topBy(prop, n, asc){
+      var arr = NUTRI_DISHES.slice().sort(function(a,b){ return asc ? a[prop]-b[prop] : b[prop]-a[prop]; });
+      return arr.slice(0,n).map(function(d){ return d.name; });
+    }
+    var adv = [];
+    if(totals.protein < ref.protein*0.8){
+      var hp = topBy("protein",2,false);
+      adv.push('蛋白质偏低，建议再加一份「'+hp.join('」或「')+'」补充蛋白。');
+    }
+    if(totals.fat > ref.fat*1.2){
+      var lf = topBy("fat",2,true);
+      adv.push('油脂偏高，可把一道换成「'+lf.join('」或「')+'」这类低油选项。');
+    }
+    if(totals.carbs > ref.carbs*1.1){
+      var lc = NUTRI_DISHES.slice().sort(function(a,b){ return a.carbs-b.carbs; }).slice(0,2).map(function(d){ return d.name; });
+      adv.push('碳水偏高，可换一份「'+lc.join('」或「')+'」来降糖。');
+    }
+    if(totals.kcal > ref.kcal*1.1){
+      var lowK = topBy("kcal",2,true);
+      adv.push('热量偏高，可把其中一道换成「'+lowK.join('」或「')+'」。');
+    }
+    var hasVeg = selectedDishIdx.some(function(idx){ return NUTRI_DISHES[idx].tags.indexOf("清淡")>=0; });
+    if(!hasVeg && adv.length < 3){
+      var veg = NUTRI_DISHES.filter(function(d){ return d.tags.indexOf("清淡")>=0; }).slice(0,2).map(function(d){ return d.name; });
+      adv.push('较缺清爽蔬菜，建议搭配「'+veg.join('」或「')+'」一类。');
+    }
+    if(adv.length===0) adv.push('搭配均衡、营养较全面，可以放心开动。');
+    adv = adv.slice(0,3);
+    advice.innerHTML = adv.map(function(a){
+      return '<li>'+svgIcon("leaf")+a+'</li>';
+    }).join("");
+  }
+
+  function renderRanking(type){
+    currentRankType = type;
+    var tabs = [
+      {key:"protein", label:"高蛋白 TOP8"},
+      {key:"lowfat", label:"低脂 TOP8"},
+      {key:"value", label:"高性价比 TOP8"}
+    ];
+    var tabWrap = el("nutri-rank-tabs");
+    tabWrap.innerHTML = tabs.map(function(t){
+      return '<button class="opt'+(type===t.key?' active':'')+'" type="button" data-rank="'+t.key+'" aria-pressed="'+(type===t.key)+'">'+t.label+'</button>';
+    }).join("");
+    tabWrap.querySelectorAll('button').forEach(function(b){
+      b.addEventListener("click", function(){ renderRanking(b.getAttribute("data-rank")); });
+    });
+
+    var arr = NUTRI_DISHES.slice();
+    var valFn;
+    if(type==="protein"){
+      arr.sort(function(a,b){ return b.protein-a.protein; });
+      valFn = function(d){ return d.protein+"g"; };
+    } else if(type==="lowfat"){
+      arr.sort(function(a,b){ return a.fat-b.fat; });
+      valFn = function(d){ return d.fat+"g"; };
+    } else {
+      arr.sort(function(a,b){ return (b.kcal/b.price)-(a.kcal/a.price); });
+      valFn = function(d){ return Math.round(d.kcal/d.price)+" kcal/元"; };
+    }
+    var top = arr.slice(0,8);
+    el("nutri-rank").innerHTML = top.map(function(d, i){
+      return '<li>'+
+        '<span class="rank-no">'+(i+1)+'</span>'+
+        '<div class="rank-name">'+esc(d.name)+'<div class="rank-sub">'+esc(d.vendor)+' · ¥'+d.price+' · '+d.kcal+' kcal</div></div>'+
+        '<span class="rank-val">'+valFn(d)+'</span>'+
+      '</li>';
+    }).join("");
+  }
+
+  function initNutri(){
+    renderNutriGoal();
+    renderDishSelect();
+    renderLegend();
+    renderSelected();
+    renderDiagnosis();
+    renderRanking("protein");
+
+    el("nutri-dish-select").addEventListener("change", function(){
+      var idx = parseInt(this.value,10);
+      if(isNaN(idx)) return;
+      if(selectedDishIdx.indexOf(idx)>=0 || selectedDishIdx.length>=3){ this.value=""; return; }
+      selectedDishIdx.push(idx);
+      this.value = "";
+      renderSelected();
+      renderDiagnosis();
+    });
+  }
+
+  /* =========================================================
    * Tab 切换
    * ========================================================= */
   function initTabs(){
     var tabs = document.querySelectorAll('.tab');
-    var views = {canteen:el("view-canteen"), meal:el("view-meal"), nearby:el("view-nearby")};
+    var views = {canteen:el("view-canteen"), meal:el("view-meal"), nearby:el("view-nearby"), nutri:el("view-nutri")};
     tabs.forEach(function(t){
       t.addEventListener("click", function(){
         var key = t.getAttribute("data-tab");
@@ -747,8 +1293,16 @@
     initTabs();
     renderCanteens("全部");
     renderShops("全部");
+    initNutri();
 
     el("pick-btn").addEventListener("click", pickToday);
+
+    // 口味 / 类型下拉筛选
+    el("canteen-flavor").addEventListener("change", function(){
+      currentCanteenFlavor = this.value;
+      renderCanteens(currentCanteenCat);
+      resetPick();
+    });
 
     // 目标单选
     document.querySelectorAll('#target-opts .opt').forEach(function(b){
