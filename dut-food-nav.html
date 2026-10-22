@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="面向大连理工大学开发区校区新生的校园吃喝决策导航——食堂决策、营养预算餐单、周边隐藏美食。">
+<title>大工吃喝导航</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23C2452B'/%3E%3Cpath d='M6 12h20v5a10 10 0 0 1-20 0z' fill='%23FAF3E6'/%3E%3Cpath d='M9 7c0 1.6.5 2.4 1 3M16 7c0 1.6.5 2.4 1 3M22 7c0 1.6.5 2.4 1 3' stroke='%23FAF3E6' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#FAF3E6;
+    --ink:#3A2C20;
+    --brick:#C2452B;
+    --brick-dark:#A33A22;
+    --green:#3F6B4C;
+    --card:#FFFDF7;
+    --line:#E7DCCB;
+    --muted:#8A7A66;
+    --chip:#F2E6D4;
+    --serif:"Noto Serif SC","Songti SC","STSong","SimSun",serif;
+    --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+    --shadow:0 2px 10px rgba(58,44,32,.08);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--brick);}
+  button{font-family:inherit;cursor:pointer;}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+
+  /* ===== 顶部导航 ===== */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+    padding:10px 16px;
+  }
+  .topbar__row{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand__logo{width:40px;height:40px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:var(--brick);border-radius:11px;color:var(--bg);}
+  .brand__title{font-family:var(--serif);font-size:1.25rem;font-weight:700;letter-spacing:.5px;line-height:1.2;}
+  .brand__sub{font-size:.72rem;color:var(--muted);letter-spacing:.5px;}
+
+  .tabs{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:0 0 auto;
+    min-height:44px;
+    padding:0 16px;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink);
+    border-radius:999px;
+    font-size:.95rem;
+    font-weight:600;
+    display:inline-flex;align-items:center;gap:7px;
+    transition:background .18s ease,color .18s ease,border-color .18s ease;
+  }
+  .tab:hover{border-color:var(--brick);}
+  .tab[aria-selected="true"]{background:var(--brick);border-color:var(--brick);color:#fff;}
+  .tab svg{width:17px;height:17px;}
+
+  main{padding:0 16px 48px;max-width:1060px;margin:0 auto;}
+  .view{display:none;}
+  .view.active{display:block;animation:viewin .25s ease;}
+
+  @keyframes viewin{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  .view-head{margin:20px 0 6px;}
+  .view-title{font-family:var(--serif);font-size:1.55rem;font-weight:700;margin:0;}
+  .view-desc{color:var(--muted);font-size:.92rem;margin:4px 0 0;}
+
+  /* ===== 筛选按钮组 ===== */
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0;}
+  .filter{
+    min-height:44px;padding:0 15px;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);
+    border-radius:999px;font-size:.92rem;font-weight:600;
+    display:inline-flex;align-items:center;gap:6px;
+    transition:background .18s ease,color .18s ease,border-color .18s ease;
+  }
+  .filter:hover{border-color:var(--brick);}
+  .filter.active{background:var(--brick);border-color:var(--brick);color:#fff;}
+
+  /* ===== 卡片网格 ===== */
+  .grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:8px;}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:10px;
+  }
+  .card__top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+  .card__name{font-family:var(--serif);font-size:1.12rem;font-weight:700;margin:0;}
+  .tag{
+    display:inline-flex;align-items:center;gap:4px;
+    font-size:.74rem;font-weight:600;line-height:1;
+    padding:5px 10px;border-radius:999px;background:var(--chip);color:var(--ink);
+    white-space:nowrap;
+  }
+  .tag--green{background:#E3EEE4;color:var(--green);}
+  .tag--brick{background:#F6DFD6;color:var(--brick);}
+  .card__desc{font-size:.9rem;color:#5A4A38;margin:0;}
+  .card__meta{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:.84rem;color:var(--muted);}
+  .meta-item{display:inline-flex;align-items:center;gap:5px;}
+  .meta-item svg{width:15px;height:15px;flex:0 0 auto;}
+  .price{font-weight:700;color:var(--brick);}
+  .card__source{font-size:.76rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px;margin:0;}
+
+  /* ===== 今天吃啥 ===== */
+  .picksome{
+    margin-top:24px;background:var(--brick);color:#fff;
+    border-radius:18px;padding:22px 18px;text-align:center;
+  }
+  .picksome__label{font-size:.8rem;letter-spacing:2px;opacity:.85;margin:0 0 4px;}
+  .picksome__btn{
+    min-height:56px;padding:0 30px;border:0;border-radius:999px;
+    background:#fff;color:var(--brick);font-size:1.15rem;font-weight:700;font-family:var(--serif);
+    display:inline-flex;align-items:center;gap:9px;box-shadow:0 4px 14px rgba(0,0,0,.2);
+    transition:transform .12s ease,background .18s ease;
+  }
+  .picksome__btn:hover{background:#fff7ee;}
+  .picksome__btn:active{transform:scale(.98);}
+  .picksome__result{margin-top:16px;min-height:56px;}
+  .picksome__hint{opacity:.85;font-size:.9rem;}
+  .pick-name{font-family:var(--serif);font-size:1.7rem;font-weight:800;margin:2px 0 2px;}
+  .pick-reason{font-size:.95rem;opacity:.92;margin:0;}
+
+  /* ===== 餐单生成器 ===== */
+  .mealgen{display:grid;grid-template-columns:1fr;gap:18px;margin-top:14px;align-items:start;}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);}
+  .panel h3{font-family:var(--serif);font-size:1.05rem;margin:0 0 12px;}
+  .field{margin-bottom:16px;}
+  .field>label{display:block;font-weight:700;font-size:.9rem;margin-bottom:8px;}
+  .field input[type="number"]{
+    width:100%;min-height:44px;font-size:16px;padding:8px 12px;
+    border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);
+  }
+  .field input[type="number"]:focus{outline:2px solid var(--brick);outline-offset:1px;border-color:var(--brick);}
+  .budget-note{font-size:.8rem;color:var(--muted);margin-top:6px;}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;}
+  .opt{
+    min-height:44px;padding:0 14px;border:1px solid var(--line);background:#fff;
+    border-radius:999px;font-size:.9rem;color:var(--ink);
+    display:inline-flex;align-items:center;gap:6px;
+    transition:background .15s ease,color .15s ease,border-color .15s ease;
+  }
+  .opt.active{background:var(--green);border-color:var(--green);color:#fff;}
+  .btn{
+    min-height:48px;padding:0 22px;border:0;border-radius:12px;
+    background:var(--brick);color:#fff;font-size:1rem;font-weight:700;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    transition:background .18s ease,transform .1s ease;
+  }
+  .btn:hover{background:var(--brick-dark);}
+  .btn:active{transform:scale(.98);}
+  .btn--ghost{background:#fff;color:var(--brick);border:1px solid var(--brick);}
+  .btn--ghost:hover{background:#fff3ec;}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;}
+
+  .plan-budget{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+  .plan-budget strong{font-family:var(--serif);font-size:1.1rem;}
+  .plan-budget .cur{color:var(--brick);font-size:1.3rem;}
+  .plan-grid{display:grid;grid-template-columns:1fr;gap:12px;}
+  .day{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden;}
+  .day__head{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;background:var(--chip);font-weight:700;}
+  .day__head .day__name{font-family:var(--serif);}
+  .day__total{font-size:.8rem;color:var(--muted);font-weight:600;}
+  .meal{display:flex;align-items:center;gap:11px;padding:10px 13px;border-top:1px solid var(--line);}
+  .meal__tag{flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:var(--brick);color:#fff;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .meal__tag.lunch{background:var(--green);}
+  .meal__tag.dinner{background:var(--ink);}
+  .meal__name{font-weight:600;font-size:.93rem;}
+  .meal__meta{font-size:.78rem;color:var(--muted);}
+  .plan-note{margin-top:14px;font-size:.8rem;color:var(--muted);text-align:center;}
+
+  /* ===== 周边店铺 ===== */
+  .shop-card{display:flex;flex-direction:column;gap:10px;}
+  .shop-card .card__name{font-size:1.08rem;}
+  .dist{color:var(--green);font-weight:700;}
+
+  footer{margin-top:40px;padding:20px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem;text-align:center;}
+  footer p{margin:4px 0;}
+
+  /* ===== 响应式：桌面端 ===== */
+  @media (min-width:720px){
+    .topbar{padding:12px 24px;}
+    .topbar__row{max-width:1060px;margin:0 auto;}
+    main{padding:0 24px 56px;}
+    .view-head{margin-top:28px;}
+    .grid{grid-template-columns:repeat(2,1fr);}
+    .mealgen{grid-template-columns:300px 1fr;}
+    .plan-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (min-width:980px){
+    .grid{grid-template-columns:repeat(3,1fr);}
+  }
+
+  /* ===== 无障碍：焦点与动效 ===== */
+  :focus-visible{outline:3px solid var(--brick);outline-offset:2px;}
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__row">
+    <div class="brand">
+      <span class="brand__logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 11h16v4a8 8 0 0 1-16 0z"/>
+          <path d="M8 5c0 1.6.5 2.4 1 3M13 5c0 1.6.5 2.4 1 3M17 5c0 1.6.5 2.4 1 3"/>
+        </svg>
+      </span>
+      <span>
+        <span class="brand__title">大工吃喝导航</span>
+        <span class="brand__sub" style="display:block;">开发区校区 · 新生吃喝指南</span>
+      </span>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="主导航">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="view-canteen" data-tab="canteen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v18M6 3l0 0M6 3c-1.5 0-1.5 0-1.5 1.5S6 6 6 6M6 21l0 0M18 3v18M18 5h-3a3 3 0 0 0 0 6h3a3 3 0 0 1 0 6h-3"/></svg>
+        食堂导航
+      </button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="view-meal" data-tab="meal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h16v5a8 8 0 0 1-16 0z"/><path d="M8 3v3M12 3v3M16 3v3"/></svg>
+        餐单生成
+      </button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="view-nearby" data-tab="nearby">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.1-7-11a7 7 0 0 1 14 0c0 5.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        周边美食
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ============ 模块一：食堂决策导航 ============ -->
+  <section id="view-canteen" class="view active" role="tabpanel" aria-labelledby="tab-canteen">
+    <div class="view-head">
+      <h1 class="view-title">今天去哪个窗口？</h1>
+      <p class="view-desc">开发区校区现有大连理工大学第六食堂：一、二楼共 15 个窗口，三楼为教工餐厅（不对学生开放）。人均为菜单主流价位参考，按需筛选后点下方按钮，帮你一键决定。</p>
+    </div>
+
+    <div class="filters" role="group" aria-label="食堂筛选" data-filter-group="canteen"></div>
+    <div class="grid" id="canteen-grid" aria-live="polite"></div>
+
+    <div class="picksome">
+      <p class="picksome__label">选择困难症专用</p>
+      <button class="picksome__btn" id="pick-btn" type="button">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v4a8 8 0 0 1-16 0z"/><path d="M8 5c0 1.6.5 2.4 1 3M13 5c0 1.6.5 2.4 1 3M17 5c0 1.6.5 2.4 1 3"/></svg>
+        今天吃啥
+      </button>
+      <div class="picksome__result" id="pick-result" aria-live="polite">
+        <p class="picksome__hint">点一下，帮你决定今天吃什么。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 模块二：营养预算餐单生成器 ============ -->
+  <section id="view-meal" class="view" role="tabpanel" aria-labelledby="tab-meal">
+    <div class="view-head">
+      <h1 class="view-title">营养预算餐单生成器</h1>
+      <p class="view-desc">设定预算与饮食目标，生成一周三餐搭配。菜品与价格来自第六食堂真实菜单，热量为估算；由连小理生成，营养数据以实际为准。</p>
+    </div>
+
+    <div class="mealgen">
+      <div class="panel">
+        <h3>我的设定</h3>
+        <div class="field">
+          <label for="budget">每日预算（元）</label>
+          <input type="number" id="budget" min="20" max="100" step="5" value="40" inputmode="numeric">
+          <div class="budget-note">范围 20 – 100 元</div>
+        </div>
+        <div class="field">
+          <label>饮食目标</label>
+          <div class="opts" id="target-opts" role="radiogroup" aria-label="饮食目标">
+            <button class="opt" type="button" role="radio" data-target="增重">增重</button>
+            <button class="opt active" type="button" role="radio" aria-checked="true" data-target="均衡">均衡</button>
+            <button class="opt" type="button" role="radio" data-target="减脂">减脂</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>忌口（可多选）</label>
+          <div class="opts" id="avoid-opts" role="group" aria-label="忌口">
+            <button class="opt" type="button" data-avoid="少辣">少辣</button>
+            <button class="opt" type="button" data-avoid="清真">清真</button>
+            <button class="opt" type="button" data-avoid="低油">低油</button>
+            <button class="opt" type="button" data-avoid="素食">素食</button>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn" id="gen-btn" type="button">生成一周餐单</button>
+          <button class="btn btn--ghost" id="reshuffle-btn" type="button">换一批</button>
+        </div>
+      </div>
+
+      <div class="panel" id="plan-panel">
+        <div class="plan-budget">
+          <span>当前预算：<span class="cur" id="plan-budget-label">¥40</span></span>
+          <span style="font-size:.82rem;color:var(--muted);">示例模板 · 周一至周日</span>
+        </div>
+        <div class="plan-grid" id="plan-grid" aria-live="polite">
+          <p class="picksome__hint" style="grid-column:1/-1;color:var(--muted);">点击「生成一周餐单」查看搭配。</p>
+        </div>
+        <p class="plan-note">由连小理生成，餐单与营养数据为示例模板，以实际就餐与营养数据为准。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 模块三：周边隐藏美食地图 ============ -->
+  <section id="view-nearby" class="view" role="tabpanel" aria-labelledby="tab-nearby">
+    <div class="view-head">
+      <h1 class="view-title">周边隐藏美食地图</h1>
+      <p class="view-desc">出校觅食，这些地方值得一试。距离与信息结合开发区校区周边实际情况整理，不确定处已标注待实测。</p>
+    </div>
+
+    <div class="filters" role="group" aria-label="周边筛选" data-filter-group="nearby"></div>
+    <div class="grid" id="nearby-grid" aria-live="polite"></div>
+  </section>
+</main>
+
+<footer>
+  <p>《大工生活 · 吃喝导航》参赛作品 · 面向大连理工大学开发区校区新生</p>
+  <p>食堂与周边信息结合公开资料整理，标注【待核验】【待团队实测】处请以现场为准，仅供决策参考。</p>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- 内联 SVG 图标（禁用 emoji） ---------- */
+  function svgIcon(kind){
+    var s='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+    switch(kind){
+      case "clock": return s+'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+      case "pin": return s+'<path d="M12 21s-7-5.1-7-11a7 7 0 0 1 14 0c0 5.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+      case "yuan": return s+'<path d="M6 4l6 8 6-8"/><path d="M8 12h8"/><path d="M7 16h10"/></svg>';
+      case "fire": return s+'<path d="M12 3c1 3-1 4.5-1 7a3 3 0 0 0 6 0c0-2-1-3.5-1-5 3 1.5 5 4.5 5 7.5a8 8 0 1 1-16 0c0-4 3-6 7-9z"/></svg>';
+      case "leaf": return s+'<path d="M4 20c0-8 5-13 16-14-1 11-6 16-14 16"/><path d="M4 20c2-6 6-10 10-12"/></svg>';
+      case "bowl": return s+'<path d="M4 11h16v4a8 8 0 0 1-16 0z"/><path d="M8 5c0 1.6.5 2.4 1 3M13 5c0 1.6.5 2.4 1 3M17 5c0 1.6.5 2.4 1 3"/></svg>';
+      default: return "";
+    }
+  }
+
+  /* =========================================================
+   * 数据（便于替换）
+   * 开发区校区真实食堂 / 周边餐饮，不确定处用占位标注
+   * ========================================================= */
+
+  var CANTEEN_FILTERS = ["全部","排队热门","人少清净","实惠","营养自助"];
+
+  /* 第六食堂各层窗口（三楼为教工餐厅，不对学生开放，故不收录）
+   * 人均、营业时段未实测者以【待核验】占位，不编造 */
+  var CANTEENS = [
+    /* ---- 一楼 ---- */
+    {
+      floor:"一楼", name:"打菜窗口", type:"大伙快餐",
+      desc:"中式大伙窗口，两荤一素约 ¥15，菜品每日轮换。",
+      price:"¥15", hours:"早 / 午 / 晚分时段", source:"团队实测",
+      cats:["实惠","营养自助"], pickable:true,
+      reason:"打菜窗口量大实惠，两荤一素管饱。"
+    },
+    {
+      floor:"一楼", name:"鲜擂擂擂饭社", type:"现擂饭食",
+      desc:"盖浇饭（长粒香米无限续）+ 早餐粥品、馅饼、烤肠。",
+      price:"¥14", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["排队热门"], pickable:true,
+      reason:"现擂饭食，口味新鲜。"
+    },
+    {
+      floor:"一楼", name:"鲍汁捞饭", type:"捞饭",
+      desc:"鲍汁盖浇饭、炸物饭为主，招牌大鸡排饭 ¥13.9。",
+      price:"¥14", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["实惠"], pickable:true,
+      reason:"鲍汁拌饭，浓香下饭。"
+    },
+    {
+      floor:"一楼", name:"瓦香鸡", type:"鸡肉饭",
+      desc:"瓦香鸡系列（南云尚品），荤菜 ¥15–18、素菜 ¥10–12，免费加汤加饭。",
+      price:"¥15", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["排队热门"], pickable:true,
+      reason:"瓦香鸡咸香入味，适合配饭。"
+    },
+    {
+      floor:"一楼", name:"清禾拉面", type:"面食",
+      desc:"汤面、炒面、拌面打卤，葱花面 ¥6 起，牛肉面 ¥12。",
+      price:"¥12", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["实惠"], pickable:true,
+      reason:"来碗热汤面，暖胃顶饱。"
+    },
+
+    /* ---- 二楼 ---- */
+    {
+      floor:"二楼", name:"比吉双拼饭", type:"双拼饭",
+      desc:"家常双拼（荤 + 素自选）按菜品计价，荤菜 ¥6–8、素菜 ¥3–6。",
+      price:"¥12", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["排队热门"], pickable:true,
+      reason:"一份双拼，两种口味。"
+    },
+    {
+      floor:"二楼", name:"轻食", type:"轻食",
+      desc:"谷物饭、意面、沙拉、自选轻餐（¥8.4/半斤），健康低卡。",
+      price:"¥13", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["人少清净","营养自助"], pickable:true,
+      reason:"想吃得清爽，可以试试轻食。"
+    },
+    {
+      floor:"二楼", name:"麻辣烫 / 麻辣拌", type:"麻辣烫",
+      desc:"麻辣烫、麻辣拌称重 ¥9.4/半斤，另有烤肉拌饭。",
+      price:"¥12", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["排队热门"], pickable:true,
+      reason:"自选食材，丰俭由人。"
+    },
+    {
+      floor:"二楼", name:"奉天朱家小馆", type:"家常小馆",
+      desc:"面食为主：汤面、炸酱面、拌面、卤味，清汤面 ¥7 起。",
+      price:"¥11", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["人少清净"], pickable:true,
+      reason:"家常炒菜，朴实管饱。"
+    },
+    {
+      floor:"二楼", name:"卤肉饭 / 凉皮 / 肉夹馍", type:"风味小吃",
+      desc:"卷饼、肉夹馍、凉皮，素菜卷 ¥8、凉皮 ¥8、卤肉卷饼 ¥12。",
+      price:"¥12", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["实惠"], pickable:true,
+      reason:"小吃组合，解馋管饱。"
+    },
+    {
+      floor:"二楼", name:"荔枝鸡牛肉双拼饭", type:"双拼饭",
+      desc:"双拼盖浇饭，招牌荔枝鸡 ¥13、荔枝鸡牛肉双拼 ¥16。",
+      price:"¥15", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["排队热门"], pickable:true,
+      reason:"招牌双拼，一次尝两种。"
+    },
+    {
+      floor:"二楼", name:"韩之味", type:"韩式料理",
+      desc:"烤冷面、炸串、韩式/石板/石锅，烤冷面 ¥8、石锅拌饭 ¥10 起。",
+      price:"¥12", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["人少清净"], pickable:true,
+      reason:"韩式风味，换个口味。"
+    },
+    {
+      floor:"二楼", name:"汉堡工厂", type:"汉堡快餐",
+      desc:"汉堡套餐、炸鸡、桶装，香辣鸡腿堡×2 ¥10、套餐 ¥12 起。",
+      price:"¥15", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["排队热门"], pickable:true,
+      reason:"汉堡出餐快，赶时间方便。"
+    },
+    {
+      floor:"二楼", name:"一碗香小馄饨手工水饺", type:"馄饨水饺",
+      desc:"小馄饨、手工水饺、烤盘饭（¥9.9/4两），手工现包。",
+      price:"¥15", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["实惠"], pickable:true,
+      reason:"手工水饺，热乎实在。"
+    },
+    {
+      floor:"二楼", name:"民族食堂", type:"民族风味",
+      desc:"民族餐厅（清真）：牛肉汤 ¥14、牛肉面 ¥16、特色饼 ¥2。",
+      price:"¥14", hours:"10:00–21:00（以窗口公示为准）", source:"团队实测",
+      cats:["人少清净"], pickable:true,
+      reason:"民族风味，清真可选。"
+    }
+  ];
+
+  /* 周边店铺 */
+  var NEARBY_FILTERS = ["全部","步行 5 分钟内","性价比","夜宵党"];
+
+  var SHOPS = [
+    {
+      name:"麦当劳（教学区南门对过）", type:"快餐",
+      desc:"教学区南门马路对过，出校即达，赶时间的好选择。",
+      price:"¥27", dist:"约 100m · 步行 1 分钟", source:"大工生存手册",
+      cats:["步行 5 分钟内","性价比"]
+    },
+    {
+      name:"罗森便利店（第七学生公寓 2 楼）", type:"便利店",
+      desc:"预制盒饭、关东煮、饭团等，全天解馋。注意不支持玉兰卡支付。",
+      price:"¥15", dist:"校内 · 第七学生公寓", source:"大工生存手册",
+      cats:["步行 5 分钟内","性价比","夜宵党"]
+    },
+    {
+      name:"瑞幸咖啡（第七学生公寓 2 楼）", type:"咖啡",
+      desc:"公寓楼下就有瑞幸；校外另有开发区校区店约 845m。",
+      price:"¥13", dist:"校内 / 约 845m", source:"大工生存手册 / 携程",
+      cats:["步行 5 分钟内","性价比"]
+    },
+    {
+      name:"知语山小区小饭馆群", type:"家常菜 / 面馆",
+      desc:"牛肉面、水煮肉片等小饭馆，很多好吃不贵。",
+      price:"¥20", dist:"约 1km · 步行约 15 分钟", source:"大工生存手册",
+      cats:["性价比"]
+    },
+    {
+      name:"知语山夜市（晚间）", type:"夜市",
+      desc:"小区马路对过晚间有小型夜市，适合晚饭后加餐。",
+      price:"¥25", dist:"约 1km【待团队实测】", source:"大工生存手册",
+      cats:["夜宵党"]
+    },
+    {
+      name:"大连大学对面夜市 / 烧烤", type:"夜市 / 烧烤",
+      desc:"沿学府大街向北步行约 1km，烧烤、各种饭馆、肯德基聚集。",
+      price:"¥30", dist:"约 1km · 步行", source:"大工生存手册",
+      cats:["性价比","夜宵党"]
+    },
+    {
+      name:"大连财经学院周边觅食", type:"综合",
+      desc:"顺生活区北边小路可达，餐饮选择丰富，可结伴探索。",
+      price:"¥25", dist:"约 1–2km【待团队实测】", source:"大工生存手册",
+      cats:["性价比"]
+    },
+    {
+      name:"万达广场 / 安盛购物广场", type:"商圈",
+      desc:"开发区商圈，打车或公交可达，餐厅选择多。",
+      price:"¥50", dist:"约 3.8km / 4.9km", source:"Trip.com / 携程",
+      cats:[]
+    }
+  ];
+
+  /* 餐单数据：菜品与价格来自第六食堂真实菜单，热量(kcal)为估算示例，营养以实际为准 */
+  var MEALS = {
+    breakfast:[
+      {name:"燕麦粥 + 玉米饼", kcal:340, price:4, fit:["均衡","减脂"], avoid:[]},
+      {name:"无糖豆浆 + 饭团", kcal:360, price:5.5, fit:["均衡","减脂"], avoid:[]},
+      {name:"皮蛋瘦肉粥 + 酱香饼", kcal:420, price:4, fit:["增重","均衡"], avoid:["清真"]},
+      {name:"南瓜粥 + 角瓜鸡蛋馅饼", kcal:380, price:3.5, fit:["均衡","减脂"], avoid:[]},
+      {name:"黑米粥 + 牛肉馅饼", kcal:460, price:5.5, fit:["增重","均衡"], avoid:[]},
+      {name:"猪肉馅饼 + 豆浆", kcal:480, price:4.5, fit:["增重","均衡"], avoid:["清真"]},
+      {name:"三明治", kcal:320, price:3.5, fit:["均衡","减脂"], avoid:["清真","素食"]},
+      {name:"汉堡包", kcal:420, price:5, fit:["增重","均衡"], avoid:["素食"]}
+    ],
+    lunch:[
+      {name:"番茄爆蛋饭", kcal:520, price:9.9, fit:["均衡","减脂"], avoid:[]},
+      {name:"辣椒炒肉饭", kcal:720, price:14, fit:["增重","均衡"], avoid:["清真","素食","少辣"]},
+      {name:"理工红烧肉饭", kcal:780, price:15, fit:["增重"], avoid:["清真","素食"]},
+      {name:"鲍汁大鸡排饭", kcal:750, price:13.9, fit:["增重","均衡"], avoid:["低油"]},
+      {name:"金牌瓦香鸡", kcal:720, price:15, fit:["增重","均衡"], avoid:["素食"]},
+      {name:"瓦香素杂拌", kcal:450, price:12, fit:["均衡","减脂"], avoid:[]},
+      {name:"葱花面", kcal:400, price:6, fit:["减脂","均衡"], avoid:[]},
+      {name:"牛肉面", kcal:620, price:12, fit:["增重","均衡"], avoid:["素食"]},
+      {name:"招牌卤肉卷饼", kcal:650, price:12, fit:["增重","均衡"], avoid:["清真","素食"]},
+      {name:"凉皮", kcal:400, price:8, fit:["减脂","均衡"], avoid:[]},
+      {name:"香煎鸡排谷物饭", kcal:520, price:12, fit:["均衡","减脂"], avoid:[]},
+      {name:"传统石锅拌饭", kcal:600, price:10, fit:["增重","均衡"], avoid:["素食"]},
+      {name:"麻辣烫（微辣）", kcal:550, price:12, fit:["增重","均衡"], avoid:["少辣","素食"]},
+      {name:"招牌炸酱面", kcal:580, price:10, fit:["增重","均衡"], avoid:["清真","素食"]},
+      {name:"招牌荔枝鸡", kcal:620, price:13, fit:["增重","均衡"], avoid:["素食"]},
+      {name:"猪肉小馄饨", kcal:500, price:13, fit:["均衡"], avoid:["清真","素食"]}
+    ],
+    dinner:[
+      {name:"瓦香鱼", kcal:650, price:16, fit:["增重","均衡"], avoid:["素食"]},
+      {name:"小鸡蘑菇面", kcal:600, price:14, fit:["增重","均衡"], avoid:["素食"]},
+      {name:"素菜卷", kcal:380, price:8, fit:["减脂","均衡"], avoid:[]},
+      {name:"金枪鱼泥谷物饭", kcal:560, price:15, fit:["均衡","减脂"], avoid:[]},
+      {name:"麻辣拌（微辣）", kcal:550, price:12, fit:["增重","均衡"], avoid:["少辣","素食"]},
+      {name:"筋头巴脑牛肉面", kcal:680, price:16, fit:["增重","均衡"], avoid:["素食"]},
+      {name:"红烧牛肉饭", kcal:700, price:18, fit:["增重"], avoid:["素食"]},
+      {name:"香辣鸡腿堡×2", kcal:800, price:10, fit:["增重"], avoid:["低油"]},
+      {name:"韭菜鸡蛋水饺", kcal:500, price:13, fit:["均衡","减脂"], avoid:[]},
+      {name:"猪肉白菜水饺", kcal:560, price:15, fit:["增重","均衡"], avoid:["清真","素食"]},
+      {name:"牛肉汤 + 特色饼", kcal:550, price:16, fit:["增重","均衡"], avoid:["素食"]},
+      {name:"烤盘饭（荤素称重）", kcal:600, price:10, fit:["增重","均衡"], avoid:[]},
+      {name:"韩式冷面", kcal:480, price:10, fit:["均衡","减脂"], avoid:[]},
+      {name:"肉三鲜水饺", kcal:620, price:18, fit:["增重","均衡"], avoid:["清真","素食"]}
+    ]
+  };
+
+  var WEEK = ["周一","周二","周三","周四","周五","周六","周日"];
+  var MEAL_TAGS = [["早",""],["午","lunch"],["晚","dinner"]];
+
+  /* =========================================================
+   * 状态
+   * ========================================================= */
+  var currentCanteenCat = "全部";
+  var currentNearbyCat = "全部";
+  var currentTarget = "均衡";
+  var currentAvoids = [];
+
+  /* =========================================================
+   * 工具
+   * ========================================================= */
+  function el(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function renderFilters(group, items, current, onPick){
+    var wrap = document.querySelector('[data-filter-group="'+group+'"]');
+    if(!wrap) return;
+    wrap.innerHTML = "";
+    items.forEach(function(item){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "filter" + (item===current ? " active" : "");
+      b.textContent = item;
+      b.addEventListener("click", function(){ onPick(item); });
+      wrap.appendChild(b);
+    });
+  }
+
+  /* =========================================================
+   * 模块一：食堂卡片 + 今天吃啥
+   * ========================================================= */
+  function renderCanteens(cat){
+    currentCanteenCat = cat;
+    renderFilters("canteen", CANTEEN_FILTERS, cat, function(c){
+      renderCanteens(c);
+      resetPick();
+    });
+    var list = CANTEENS.filter(function(c){ return cat==="全部" || c.cats.indexOf(cat)>=0; });
+    var grid = el("canteen-grid");
+    grid.innerHTML = list.map(function(c){
+      return '<article class="card">'+
+        '<div class="card__top"><h2 class="card__name">'+esc(c.name)+'</h2>'+
+        '<div style="display:flex;gap:6px;flex-wrap:wrap;">'+
+        '<span class="tag tag--green">'+esc(c.floor)+'</span>'+
+        '<span class="tag">'+esc(c.type)+'</span></div></div>'+
+        '<p class="card__desc">'+esc(c.desc)+'</p>'+
+        '<div class="card__meta">'+
+          '<span class="meta-item">'+svgIcon("yuan")+'<span>人均 <span class="price">'+esc(c.price)+'</span></span></span>'+
+          '<span class="meta-item">'+svgIcon("clock")+esc(c.hours)+'</span>'+
+        '</div>'+
+        '<p class="card__source">来源标注：'+esc(c.source)+'</p>'+
+      '</article>';
+    }).join("");
+  }
+
+  function resetPick(){
+    el("pick-result").innerHTML = '<p class="picksome__hint">点一下，帮你决定今天吃什么。</p>';
+  }
+
+  function pickToday(){
+    var pool = CANTEENS.filter(function(c){
+      return (currentCanteenCat==="全部" || c.cats.indexOf(currentCanteenCat)>=0) && c.pickable;
+    });
+    var box = el("pick-result");
+    if(pool.length===0){
+      box.innerHTML = '<p class="picksome__hint">当前筛选暂无可直接推荐的食堂，试试「全部」。</p>';
+      return;
+    }
+    var c = rand(pool);
+    box.innerHTML =
+      '<div style="font-size:2rem;line-height:1;margin-bottom:6px;" aria-hidden="true">'+svgIcon("bowl").replace('width="15"','width="34"').replace('height="15"','height="34"')+'</div>'+
+      '<p class="pick-name">'+esc(c.name)+'</p>'+
+      '<p class="pick-reason">'+esc(c.reason)+' <span style="opacity:.8;">（人均 '+esc(c.price)+'）</span></p>';
+  }
+
+  /* =========================================================
+   * 模块二：餐单生成
+   * ========================================================= */
+  function pickMeal(type, budget, target, avoids){
+    var pool = MEALS[type].filter(function(m){
+      var okFit = m.fit.indexOf(target)>=0;
+      var okAvoid = !m.avoid.some(function(a){ return avoids.indexOf(a)>=0; });
+      return okFit && okAvoid;
+    });
+    if(pool.length===0){
+      pool = MEALS[type].filter(function(m){
+        return !m.avoid.some(function(a){ return avoids.indexOf(a)>=0; });
+      });
+    }
+    if(pool.length===0) pool = MEALS[type];
+    var maxPrice = type==="breakfast" ? 100 : (budget<=30 ? 16 : (budget<=45 ? 20 : 30));
+    var affordable = pool.filter(function(m){ return m.price<=maxPrice; });
+    if(affordable.length>0) pool = affordable;
+    return rand(pool);
+  }
+
+  function generatePlan(){
+    var budget = clamp(parseInt(el("budget").value,10) || 40, 20, 100);
+    el("budget").value = budget;
+    el("plan-budget-label").textContent = "¥"+budget;
+    var grid = el("plan-grid");
+    var html = "";
+    WEEK.forEach(function(day){
+      var meals = ["breakfast","lunch","dinner"].map(function(type){
+        return pickMeal(type, budget, currentTarget, currentAvoids);
+      });
+      var price = meals.reduce(function(s,m){return s+m.price;},0);
+      var kcal = meals.reduce(function(s,m){return s+m.kcal;},0);
+      html += '<article class="day"><header class="day__head">'+
+        '<span class="day__name">'+day+'</span>'+
+        '<span class="day__total">约 ¥'+price+' · '+kcal+' kcal</span></header>';
+      meals.forEach(function(m,i){
+        html += '<div class="meal"><span class="meal__tag '+MEAL_TAGS[i][1]+'">'+MEAL_TAGS[i][0]+'</span>'+
+          '<div><div class="meal__name">'+esc(m.name)+'</div>'+
+          '<div class="meal__meta">'+m.kcal+' kcal · ¥'+m.price+'</div></div></div>';
+      });
+      html += '</article>';
+    });
+    grid.innerHTML = html;
+  }
+
+  function clamp(n,lo,hi){ return Math.max(lo, Math.min(hi, n)); }
+
+  /* =========================================================
+   * 模块三：周边店铺
+   * ========================================================= */
+  function renderShops(cat){
+    currentNearbyCat = cat;
+    renderFilters("nearby", NEARBY_FILTERS, cat, function(c){ renderShops(c); });
+    var list = SHOPS.filter(function(s){ return cat==="全部" || s.cats.indexOf(cat)>=0; });
+    var grid = el("nearby-grid");
+    grid.innerHTML = list.map(function(s){
+      return '<article class="card shop-card">'+
+        '<div class="card__top"><h2 class="card__name">'+esc(s.name)+'</h2>'+
+        '<span class="tag tag--green">'+esc(s.type)+'</span></div>'+
+        '<p class="card__desc">'+esc(s.desc)+'</p>'+
+        '<div class="card__meta">'+
+          '<span class="meta-item">'+svgIcon("yuan")+'<span>人均 <span class="price">'+esc(s.price)+'</span></span></span>'+
+          '<span class="meta-item">'+svgIcon("pin")+'<span class="dist">'+esc(s.dist)+'</span></span>'+
+        '</div>'+
+        '<p class="card__source">来源标注：'+esc(s.source)+'</p>'+
+      '</article>';
+    }).join("");
+  }
+
+  /* =========================================================
+   * Tab 切换
+   * ========================================================= */
+  function initTabs(){
+    var tabs = document.querySelectorAll('.tab');
+    var views = {canteen:el("view-canteen"), meal:el("view-meal"), nearby:el("view-nearby")};
+    tabs.forEach(function(t){
+      t.addEventListener("click", function(){
+        var key = t.getAttribute("data-tab");
+        tabs.forEach(function(x){ x.setAttribute("aria-selected", x===t ? "true":"false"); });
+        Object.keys(views).forEach(function(k){
+          views[k].classList.toggle("active", k===key);
+        });
+      });
+    });
+  }
+
+  /* =========================================================
+   * 初始化
+   * ========================================================= */
+  function init(){
+    initTabs();
+    renderCanteens("全部");
+    renderShops("全部");
+
+    el("pick-btn").addEventListener("click", pickToday);
+
+    // 目标单选
+    document.querySelectorAll('#target-opts .opt').forEach(function(b){
+      b.addEventListener("click", function(){
+        document.querySelectorAll('#target-opts .opt').forEach(function(x){
+          x.classList.remove("active"); x.setAttribute("aria-checked","false");
+        });
+        b.classList.add("active"); b.setAttribute("aria-checked","true");
+        currentTarget = b.getAttribute("data-target");
+      });
+    });
+
+    // 忌口多选
+    document.querySelectorAll('#avoid-opts .opt').forEach(function(b){
+      b.addEventListener("click", function(){
+        var key = b.getAttribute("data-avoid");
+        var i = currentAvoids.indexOf(key);
+        if(i>=0){ currentAvoids.splice(i,1); b.classList.remove("active"); b.setAttribute("aria-pressed","false"); }
+        else { currentAvoids.push(key); b.classList.add("active"); b.setAttribute("aria-pressed","true"); }
+      });
+    });
+
+    el("gen-btn").addEventListener("click", generatePlan);
+    el("reshuffle-btn").addEventListener("click", generatePlan);
+
+    el("budget").addEventListener("change", function(){
+      var v = clamp(parseInt(this.value,10)||40,20,100); this.value=v;
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>
