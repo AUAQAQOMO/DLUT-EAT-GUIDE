@@ -348,6 +348,7 @@
   .shop-info{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:12px;}
   .shop-info .meta-item{font-size:.86rem;}
   .shop-map{margin-bottom:12px;height:260px;border-radius:12px;overflow:hidden;position:relative;background:var(--chip);}
+  .shop-map__canvas{width:100%;height:100%;}
   .shop-map__placeholder{
     width:100%;height:260px;border-radius:12px;display:flex;align-items:center;justify-content:center;
     background:var(--chip);color:var(--muted);font-size:.9rem;border:1px dashed var(--line);
@@ -1347,16 +1348,27 @@ var NUTRI_DISHES = [
   /* 高德地图：实例与加载状态（生命周期管理） */
   var shopMapInstance = null;
   var shopMapToken = 0;
+  var amapCallbacks = [];
+  var amapLoading = false;
 
   function loadAMap(cb){
     if(window.AMap){ cb(true); return; }
     if(!AMAP_KEY || AMAP_KEY === "你的高德Key"){ cb(false); return; }
-    if(window.__amapLoading){ return; }
-    window.__amapLoading = true;
+    amapCallbacks.push(cb);
+    if(amapLoading) return;
+    amapLoading = true;
     var s = document.createElement('script');
     s.src = 'https://webapi.amap.com/maps?v=2.0&key=' + encodeURIComponent(AMAP_KEY) + '&plugin=AMap.Marker,AMap.Scale';
-    s.onload = function(){ window.__amapLoading = false; cb(true); };
-    s.onerror = function(){ window.__amapLoading = false; cb(false); };
+    s.onload = function(){
+      amapLoading = false;
+      var cbs = amapCallbacks.splice(0);
+      cbs.forEach(function(f){ f(true); });
+    };
+    s.onerror = function(){
+      amapLoading = false;
+      var cbs = amapCallbacks.splice(0);
+      cbs.forEach(function(f){ f(false); });
+    };
     document.head.appendChild(s);
   }
 
@@ -1381,30 +1393,10 @@ var NUTRI_DISHES = [
 
     var lat = parseFloat(shop.lat), lng = parseFloat(shop.lng);
     var mapBox = el("shop-map");
-    mapBox.innerHTML = '';
     var hasCoord = !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0;
-    if(hasCoord){
-      mapBox.innerHTML = '<div class="shop-map__placeholder">地图加载中…</div>';
-      loadAMap(function(ok){
-        if(token !== shopMapToken) return;
-        if(el("shop-modal").hidden) return;
-        if(!ok){
-          mapBox.innerHTML = '<div class="shop-map__placeholder">地图暂不可用（未配置高德 Key 或加载失败）</div>';
-          return;
-        }
-        try {
-          var map = new AMap.Map(mapBox, { center: [lng, lat], zoom: 15, resizeEnable: true });
-          var marker = new AMap.Marker({ position: [lng, lat], title: shop.name, anchor: 'bottom-center' });
-          map.add(marker);
-          map.setFitView([marker], false, [60, 60, 60, 60]);
-          shopMapInstance = map;
-        } catch(e){
-          mapBox.innerHTML = '<div class="shop-map__placeholder">地图加载失败</div>';
-        }
-      });
-    } else {
-      mapBox.innerHTML = '<div class="shop-map__placeholder">坐标缺失，地图暂不可用</div>';
-    }
+    mapBox.innerHTML = hasCoord
+      ? '<div class="shop-map__placeholder">地图加载中…</div>'
+      : '<div class="shop-map__placeholder">坐标缺失，地图暂不可用</div>';
 
     el("shop-loc").innerHTML = svgIcon("pin")+'<span>'+esc(shop.address || shop.name)+' · 距学校 '+esc(shop.dist)+'</span>';
 
@@ -1415,8 +1407,32 @@ var NUTRI_DISHES = [
       nav.href = "https://uri.amap.com/search?keyword=" + encodeURIComponent(shop.address || shop.name);
     }
 
+    // 先显示弹窗，确保地图容器有实际尺寸，再创建地图
     el("shop-modal").hidden = false;
     document.body.style.overflow = "hidden";
+
+    if(hasCoord){
+      loadAMap(function(ok){
+        if(token !== shopMapToken) return;
+        if(el("shop-modal").hidden) return;
+        if(!ok){
+          mapBox.innerHTML = '<div class="shop-map__placeholder">地图暂不可用（未配置高德 Key 或加载失败）</div>';
+          return;
+        }
+        try {
+          // 每次用全新子容器，避免高德对同一容器重复初始化导致的空白
+          mapBox.innerHTML = '<div class="shop-map__canvas"></div>';
+          var container = mapBox.children[0];
+          var map = new AMap.Map(container, { center: [lng, lat], zoom: 15, resizeEnable: true });
+          var marker = new AMap.Marker({ position: [lng, lat], title: shop.name, anchor: 'bottom-center' });
+          map.add(marker);
+          map.setFitView([marker], false, [60, 60, 60, 60]);
+          shopMapInstance = map;
+        } catch(e){
+          mapBox.innerHTML = '<div class="shop-map__placeholder">地图加载失败</div>';
+        }
+      });
+    }
   }
 
   function closeShopModal(){
